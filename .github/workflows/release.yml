@@ -1,0 +1,147 @@
+name: 🚀 Release to Maven Central
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Version à publier (ex: 1.0.0)'
+        required: true
+        type: string
+      next_development_version:
+        description: 'Prochaine version de développement (ex: 1.0.1-SNAPSHOT)'
+        required: true
+        type: string
+        default: '1.0.1-SNAPSHOT'
+      dry_run:
+        description: 'Test de release (sans publication)'
+        required: false
+        type: boolean
+        default: false
+
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  JAVA_VERSION: '21'
+  JAVA_DISTRIBUTION: 'temurin'
+  MAVEN_OPTS: '-Xmx1024m -XX:MaxMetaspaceSize=512m'
+
+jobs:
+  validate:
+    name: 🔍 Validation pré-release
+    runs-on: ubuntu-latest
+    outputs:
+      release_version: ${{ steps.version.outputs.release_version }}
+      next_version: ${{ steps.version.outputs.next_version }}
+      
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ☕ Configuration Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🔢 Détermination des versions
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "release_version=${{ github.event.inputs.release_version }}" >> $GITHUB_OUTPUT
+            echo "next_version=${{ github.event.inputs.next_development_version }}" >> $GITHUB_OUTPUT
+          else
+            TAG_VERSION=${GITHUB_REF#refs/tags/v}
+            echo "release_version=$TAG_VERSION" >> $GITHUB_OUTPUT
+            IFS='.' read -r major minor patch <<< "$TAG_VERSION"
+            next_patch=$((patch + 1))
+            echo "next_version=${major}.${minor}.${next_patch}-SNAPSHOT" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🧪 Tests complets
+        run: mvn clean verify -Pci
+
+  release:
+    name: 📦 Release Maven Central
+    runs-on: ubuntu-latest
+    needs: validate
+    if: ${{ !github.event.inputs.dry_run || github.event.inputs.dry_run == 'false' }}
+    environment: production
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ☕ Configuration Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🔐 Import de la clé GPG
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: 📝 Configuration Maven settings.xml
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "ossrh",
+              "username": "${{ secrets.SONATYPE_USERNAME }}",
+              "password": "${{ secrets.SONATYPE_PASSWORD }}"
+            }]
+
+      - name: 🔢 Mise à jour de la version
+        run: |
+          mvn versions:set -DnewVersion=${{ needs.validate.outputs.release_version }}
+          mvn versions:commit
+
+      - name: 📦 Déploiement vers Maven Central
+        run: |
+          mvn clean deploy -Prelease -DskipTests=true
+          echo "✅ Déployé vers Maven Central"
+
+      - name: 🎉 Création de la GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.validate.outputs.release_version }}
+          name: "Release ${{ needs.validate.outputs.release_version }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dry_run:
+    name: 🧪 Test de release (Dry Run)
+    runs-on: ubuntu-latest
+    needs: validate
+    if: ${{ github.event.inputs.dry_run == 'true' }}
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: ☕ Configuration Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🧪 Test de build
+        run: |
+          mvn versions:set -DnewVersion=${{ needs.validate.outputs.release_version }}
+          mvn clean package -Prelease -DskipTests=true
+          echo "✅ Dry run terminé avec succès"

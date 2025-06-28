@@ -1,0 +1,99 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'com.enokdev.graphql.autogen' version '1.0.0-SNAPSHOT'
+}
+
+group = 'com.enokdev.graphql.examples'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '21'
+
+repositories {
+    mavenCentral()
+    mavenLocal() // For SNAPSHOT versions
+}
+
+dependencies {
+    // GraphQL AutoGen Starter - This is all you need!
+    implementation 'com.enokdev.graphql:graphql-autogen-spring-boot-starter:1.0.0-SNAPSHOT'
+    
+    // Spring Boot starters
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    // H2 Database for development
+    runtimeOnly 'com.h2database:h2'
+    
+    // Test dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.graphql:spring-graphql-test'
+}
+
+// Configure GraphQL AutoGen plugin
+graphqlAutoGen {
+    basePackages 'com.enokdev.graphql.examples.gradle'
+    generateInputs true
+    namingStrategy 'PASCAL_CASE'
+    schemaFileName 'gradle-example-schema.graphqls'
+    includeInheritedFields true
+    maxScanDepth 10
+    
+    // Exclude certain packages if needed
+    excludePackages 'com.enokdev.graphql.examples.gradle.internal'
+}
+
+// Configure tasks
+tasks.named('generateGraphQLSchema') {
+    // Run after compileJava to ensure classes are available
+    dependsOn 'compileJava'
+    
+    // Custom configuration
+    doFirst {
+        logger.info("Starting GraphQL schema generation for Gradle example...")
+    }
+    
+    doLast {
+        logger.info("GraphQL schema generation completed!")
+    }
+}
+
+tasks.named('validateGraphQLSchema') {
+    // Expect at least 3 types in this example
+    minTypes = 3
+    validateNotEmpty = true
+}
+
+tasks.named('cleanGraphQLSchema') {
+    // Only clean schema files, not the entire directory
+    cleanOnlySchemaFiles = true
+}
+
+// Make build depend on schema validation
+tasks.named('build') {
+    dependsOn 'validateGraphQLSchema'
+}
+
+// Custom task to display generated schema
+tasks.register('showGeneratedSchema') {
+    group = 'GraphQL AutoGen'
+    description = 'Display the generated GraphQL schema'
+    
+    dependsOn 'generateGraphQLSchema'
+    
+    doLast {
+        def schemaFile = file("${buildDir}/generated/sources/graphql/gradle-example-schema.graphqls")
+        if (schemaFile.exists()) {
+            println "Generated GraphQL Schema:"
+            println "=" * 50
+            println schemaFile.text
+            println "=" * 50
+        } else {
+            println "Schema file not found: ${schemaFile.path}"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.enokdev.graphql</groupId>
+        <artifactId>graphql-autogen-examples</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>simple-library-example</artifactId>
+    <n>Simple Library Example</n>
+    <description>Simple library management example using GraphQL AutoGen</description>
+
+    <dependencies>
+        <!-- GraphQL AutoGen Starter - This is all you need! -->
+        <dependency>
+            <groupId>com.enokdev.graphql</groupId>
+            <artifactId>graphql-autogen-spring-boot-starter</artifactId>
+        </dependency>
+        
+        <!-- Spring Boot starters -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        
+        <!-- H2 Database for development -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.graphql</groupId>
+            <artifactId>spring-graphql-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            
+            <!-- GraphQL AutoGen Maven Plugin -->
+            <plugin>
+                <groupId>com.enokdev.graphql</groupId>
+                <artifactId>graphql-autogen-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-schema</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-schema</goal>
+                        </goals>
+                        <configuration>
+                            <basePackages>
+                                <basePackage>com.enokdev.graphql.examples.library</basePackage>
+                            </basePackages>
+                            <generateInputs>true</generateInputs>
+                            <namingStrategy>PASCAL_CASE</namingStrategy>
+                            <schemaFileName>library-schema.graphqls</schemaFileName>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>validate-schema</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>validate-schema</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFileName>library-schema.graphqls</schemaFileName>
+                            <minTypes>3</minTypes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

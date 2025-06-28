@@ -1,0 +1,7 @@
+# Spring Boot Auto Configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.enokdev.graphql.autogen.starter.GraphQLAutoGenAutoConfiguration
+
+# Application Listeners
+org.springframework.context.ApplicationListener=\
+com.enokdev.graphql.autogen.starter.GraphQLSchemaGenerationApplicationListener

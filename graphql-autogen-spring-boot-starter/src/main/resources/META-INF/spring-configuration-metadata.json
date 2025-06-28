@@ -1,0 +1,116 @@
+{
+  "groups": [
+    {
+      "name": "spring.graphql.autogen",
+      "type": "com.enokdev.graphql.autogen.autoconfigure.GraphQLAutoGenProperties",
+      "description": "Configuration properties for GraphQL AutoGen."
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.graphql.autogen.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable GraphQL AutoGen auto-configuration."
+    },
+    {
+      "name": "spring.graphql.autogen.base-packages",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Base packages to scan for GraphQL annotations."
+    },
+    {
+      "name": "spring.graphql.autogen.naming-strategy",
+      "type": "com.enokdev.graphql.autogen.autoconfigure.GraphQLAutoGenProperties$NamingStrategy",
+      "defaultValue": "CAMEL_CASE",
+      "description": "Naming strategy for GraphQL types and fields."
+    },
+    {
+      "name": "spring.graphql.autogen.generate-inputs",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to automatically generate input types."
+    },
+    {
+      "name": "spring.graphql.autogen.generate-subscriptions",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to generate subscriptions."
+    },
+    {
+      "name": "spring.graphql.autogen.type-mapping",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "Custom type mappings from Java types to GraphQL scalar names."
+    },
+    {
+      "name": "spring.graphql.autogen.schema.location",
+      "type": "java.lang.String",
+      "defaultValue": "classpath:graphql/",
+      "description": "Location where to generate the schema file."
+    },
+    {
+      "name": "spring.graphql.autogen.schema.file-name",
+      "type": "java.lang.String",
+      "defaultValue": "schema.graphqls",
+      "description": "Name of the generated schema file."
+    },
+    {
+      "name": "spring.graphql.autogen.schema.generate-at-startup",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to generate schema file at startup."
+    },
+    {
+      "name": "spring.graphql.autogen.performance.enable-dataloader",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable DataLoader for batch loading."
+    },
+    {
+      "name": "spring.graphql.autogen.performance.batch-size",
+      "type": "java.lang.Integer",
+      "defaultValue": 100,
+      "description": "Default batch size for DataLoaders."
+    },
+    {
+      "name": "spring.graphql.autogen.validation.enable-bean-validation",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable Bean Validation integration."
+    },
+    {
+      "name": "spring.graphql.autogen.introspection.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable GraphQL introspection."
+    },
+    {
+      "name": "spring.graphql.autogen.introspection.playground",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable GraphQL playground/GraphiQL."
+    }
+  ],
+  "hints": [
+    {
+      "name": "spring.graphql.autogen.naming-strategy",
+      "values": [
+        {
+          "value": "CAMEL_CASE",
+          "description": "camelCase naming (default)."
+        },
+        {
+          "value": "SNAKE_CASE",
+          "description": "snake_case naming."
+        },
+        {
+          "value": "PASCAL_CASE",
+          "description": "PascalCase naming."
+        },
+        {
+          "value": "UNCHANGED",
+          "description": "Keep original Java naming."
+        }
+      ]
+    }
+  ]
+}

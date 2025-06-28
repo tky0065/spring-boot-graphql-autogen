@@ -1,0 +1,49 @@
+# Configuration pour les tests avec base de données H2
+# Phase 8 : Testing et qualité - Tests avec base de données H2 réelle
+
+spring:
+  # Configuration de la base de données H2 pour les tests
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    
+  # Configuration JPA pour les tests
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        
+  # Configuration H2 Console pour debugging (activée seulement en test)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  # Configuration GraphQL AutoGen pour les tests
+  graphql:
+    autogen:
+      enabled: true
+      base-packages: com.enokdev.graphql.examples.ecommerce
+      schema-location: classpath:schema-test.graphqls
+      generate-inputs: true
+      naming-strategy: CAMEL_CASE
+      
+# Configuration des logs pour les tests
+logging:
+  level:
+    com.enokdev.graphql: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    
+# Configuration de test spécifique
+test:
+  database:
+    reset: true
+    populate: true

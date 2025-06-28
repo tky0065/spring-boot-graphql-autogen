@@ -1,0 +1,138 @@
+# Configuration pour l'exemple Blog
+# Phase 9 : Documentation et exemples - Exemple API de blog
+
+spring:
+  application:
+    name: blog-example
+    
+  # Configuration de la base de données H2
+  datasource:
+    url: jdbc:h2:mem:blogdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    
+  # Configuration JPA/Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        
+  # Configuration H2 Console pour le développement
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  # Configuration GraphQL Auto-Generator
+  graphql:
+    autogen:
+      enabled: true
+      base-packages: 
+        - com.enokdev.graphql.examples.blog.entity
+        - com.enokdev.graphql.examples.blog.controller
+      schema-location: graphql/blog-schema.graphqls
+      generate-inputs: true
+      naming-strategy: CAMEL_CASE
+      
+      # Configuration des DataLoaders pour optimiser les requêtes N+1
+      enable-dataloader: true
+      dataloader:
+        batch-size: 100
+        cache-size: 1000
+        enable-caching: true
+        
+      # Configuration de la pagination
+      pagination:
+        default-page-size: 10
+        max-page-size: 100
+        enable-relay: true
+        enable-offset: true
+        
+      # Mapping de types personnalisés
+      type-mapping:
+        LocalDateTime: DateTime
+        LocalDate: Date
+        
+      # Configuration de développement
+      development:
+        enable-schema-validation: true
+        enable-introspection: true
+        pretty-print-schema: true
+        
+      # Logging pour le développement
+      logging:
+        log-schema-generation: true
+        log-query-execution: false
+        log-dataloader-stats: true
+
+# Configuration des logs
+logging:
+  level:
+    com.enokdev.graphql: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    
+# Configuration du serveur
+server:
+  port: 8080
+  
+# Configuration des métriques (pour le monitoring)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Configuration spécifique à l'exemple blog
+blog:
+  # Configuration des commentaires
+  comments:
+    moderation:
+      auto-approve: false
+      spam-detection: true
+      max-depth: 5
+      
+  # Configuration des articles
+  posts:
+    auto-generate-excerpt: true
+    auto-calculate-reading-time: true
+    default-status: DRAFT
+    
+  # Configuration des fichiers
+  upload:
+    max-file-size: 10MB
+    allowed-types: jpg,jpeg,png,gif,webp
+    base-path: /uploads/blog
+    
+# Informations de l'application (exposées via /actuator/info)
+info:
+  app:
+    name: "@project.name@"
+    description: "@project.description@"
+    version: "@project.version@"
+    encoding: "@project.build.sourceEncoding@"
+    java:
+      version: "@java.version@"
+  example:
+    type: "Blog API"
+    features:
+      - "Authors management"
+      - "Posts with categories and tags"
+      - "Hierarchical comments system"
+      - "Moderation workflow"
+      - "Auto-generated GraphQL schema"
+      - "DataLoaders optimization"
+      - "Pagination support"
