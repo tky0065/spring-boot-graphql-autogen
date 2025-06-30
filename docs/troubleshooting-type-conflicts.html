@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résolution des Conflits de Types - Spring Boot GraphQL Auto-Generator</title>
+    <meta name="description" content="Guide de dépannage pour résoudre les conflits de types dans GraphQL AutoGen">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tky0065.github.io/spring-boot-graphql-autogen/troubleshooting-type-conflicts.html">
+    <meta property="og:title" content="Résolution des Conflits de Types - Spring Boot GraphQL Auto-Generator">
+    <meta property="og:description" content="Guide de dépannage pour résoudre les conflits de types dans GraphQL AutoGen">
+    <meta property="og:image" content="https://tky0065.github.io/spring-boot-graphql-autogen/img/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Prism.js pour la coloration syntaxique -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+                    <span>GraphQL AutoGen</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
+                <a href="index.html#getting-started" class="nav-link">Démarrage</a>
+                <a href="index.html#documentation" class="nav-link">Documentation</a>
+                <a href="index.html#examples" class="nav-link">Exemples</a>
+                <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
+                <a href="playground.html" class="nav-cta">Playground</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Content -->
+    <section class="documentation">
+        <div class="container">
+            <div class="doc-sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="quick-start-guide.html">Guide de démarrage rapide</a></li>
+                    <li><a href="annotations-reference.html">Référence des annotations</a></li>
+                    <li><a href="best-practices.html">Bonnes pratiques</a></li>
+                    <li><a href="advanced-configuration.html">Configuration avancée</a></li>
+                    <li><a href="performance-optimization-guide.html">Optimisation des performances</a></li>
+                    <li><a href="troubleshooting-type-conflicts.html" class="active">Résolution des conflits de types</a></li>
+                    <li><a href="migration-guide.html">Guide de migration</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="doc-content">
+                <h1><i class="fas fa-exclamation-triangle"></i> Résolution des Conflits de Types</h1>
+
+                <div class="doc-introduction">
+                    <p>Ce guide vous aide à diagnostiquer et résoudre les conflits de types courants dans vos schémas GraphQL générés avec GraphQL AutoGen.</p>
+                </div>
+
+                <hr>
+
+                <h2><i class="fas fa-bug"></i> Types de Conflits Courants</h2>
+
+                <div class="conflict-types">
+                    <h3>Conflit de noms de types</h3>
+                    <p>Ce type de conflit se produit lorsque deux ou plusieurs classes Java génèrent des types GraphQL avec le même nom.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Exemple d'erreur</span>
+                        </div>
+                        <pre><code class="language-text">org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'graphQLSchema': Type 'User' is already defined</code></pre>
+                    </div>
+
+                    <h3>Conflit de définition de champs</h3>
+                    <p>Ce conflit survient lorsqu'un champ est défini plusieurs fois avec des types de retour différents.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Exemple d'erreur</span>
+                        </div>
+                        <pre><code class="language-text">org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'graphQLSchema': Field 'Product.price' has conflicting type definitions: BigDecimal vs Float</code></pre>
+                    </div>
+
+                    <h3>Conflit d'arguments</h3>
+                    <p>Ce conflit se produit lorsque les arguments d'une requête ou d'un champ ont des types incompatibles.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Exemple d'erreur</span>
+                        </div>
+                        <pre><code class="language-text">org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'graphQLSchema': Argument 'id' of field 'Query.product' has conflicting types: ID vs Long</code></pre>
+                    </div>
+                </div>
+
+                <h2><i class="fas fa-tools"></i> Solutions pour les Conflits de Noms</h2>
+
+                <h3>1. Renommer avec @GraphQLType</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Solution</span>
+                    </div>
+                    <pre><code class="language-java">// Dans le package com.example.user
+@Entity
+@GraphQLType(name = "AppUser") // Renommé pour éviter le conflit
+public class User {
+    // ...
+}
+
+// Dans le package com.example.auth
+@Entity
+@GraphQLType(name = "AuthUser") // Renommé pour éviter le conflit
+public class User {
+    // ...
+}</code></pre>
+                </div>
+
+                <h3>2. Utiliser des espaces de noms</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Configuration</span>
+                    </div>
+                    <pre><code class="language-properties"># application.properties
+graphql.autogen.use-package-namespaces=true</code></pre>
+                </div>
+
+                <p>Avec cette configuration, les types seront automatiquement préfixés avec leur nom de package :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Résultat</span>
+                    </div>
+                    <pre><code class="language-graphql">type User_example_user {
+  id: ID!
+  username: String!
+}
+
+type User_example_auth {
+  id: ID!
+  email: String!
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-tools"></i> Solutions pour les Conflits de Champs</h2>
+
+                <h3>1. Renommer avec @GraphQLField</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Solution</span>
+                    </div>
+                    <pre><code class="language-java">@GraphQLType
+public class Product {
+    // ...
+
+    @GraphQLField(name = "priceAmount")
+    private BigDecimal price;
+
+    // ...
+}</code></pre>
+                </div>
+
+                <h3>2. Exclure le champ problématique</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Solution</span>
+                    </div>
+                    <pre><code class="language-java">@GraphQLType
+public class Product {
+    // ...
+
+    @GraphQLIgnore
+    private BigDecimal price;
+
+    @GraphQLField(name = "price")
+    public Double getPriceAsDouble() {
+        return price != null ? price.doubleValue() : null;
+    }
+
+    // ...
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-tools"></i> Solutions pour les Conflits d'Arguments</h2>
+
+                <h3>Corriger le type d'argument</h3>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Solution</span>
+                    </div>
+                    <pre><code class="language-java">@RestController
+public class ProductController {
+
+    @GraphQLQuery(name = "product")
+    public Product getProductById(@GraphQLArgument(name = "id", type = "ID") String id) {
+        // Conversion en Long si nécessaire
+        return productService.findById(Long.valueOf(id));
+    }
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-project-diagram"></i> Stratégies Avancées</h2>
+
+                <h3>Segmentation par modules</h3>
+
+                <p>Pour les applications plus grandes, envisagez de segmenter votre schéma GraphQL par domaines fonctionnels :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Configuration multi-schémas</span>
+                    </div>
+                    <pre><code class="language-properties"># application.properties
+graphql.autogen.schemas[0].name=productSchema
+graphql.autogen.schemas[0].base-package=com.example.product
+graphql.autogen.schemas[0].path=/graphql/product
+
+graphql.autogen.schemas[1].name=userSchema
+graphql.autogen.schemas[1].base-package=com.example.user
+graphql.autogen.schemas[1].path=/graphql/user</code></pre>
+                </div>
+
+                <h3>Transformateurs de schéma personnalisés</h3>
+
+                <p>Créez des transformateurs personnalisés pour résoudre les conflits au moment de la génération :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Transformateur personnalisé</span>
+                    </div>
+                    <pre><code class="language-java">@Component
+public class ConflictResolvingTransformer implements GraphQLSchemaTransformer {
+
+    @Override
+    public GraphQLSchema transform(GraphQLSchema originalSchema) {
+        // Logique personnalisée pour résoudre les conflits
+        return SchemaTransformer.newSchema(originalSchema)
+            .renameType("User", "AppUser")
+            .transformField("Product", "price", field -> field.name("productPrice"))
+            .build();
+    }
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-heartbeat"></i> Surveillance et Prévention</h2>
+
+                <h3>Tests de schéma</h3>
+
+                <p>Créez des tests unitaires pour vérifier la validité de votre schéma :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Test JUnit</span>
+                    </div>
+                    <pre><code class="language-java">@SpringBootTest
+class SchemaValidationTests {
+
+    @Autowired
+    private GraphQLSchema schema;
+
+    @Test
+    void validateSchema() {
+        SchemaValidator validator = new SchemaValidator();
+        List<SchemaValidationError> errors = validator.validateSchema(schema);
+
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
+    void checkForTypeConflicts() {
+        // Vérifier spécifiquement les types problématiques connus
+        assertThat(schema.getType("User")).isNotNull();
+        assertThat(schema.getType("AppUser")).isNotNull();
+    }
+}</code></pre>
+                </div>
+
+                <div class="next-steps">
+                    <p>Pour mettre à jour votre application vers de nouvelles versions de GraphQL AutoGen, consultez notre <a href="migration-guide.html">guide de migration</a>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
+

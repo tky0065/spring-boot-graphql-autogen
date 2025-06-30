@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Spring Boot GraphQL Auto-Generator</title>
+    <meta name="description" content="Foire aux questions sur GraphQL AutoGen">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tky0065.github.io/spring-boot-graphql-autogen/faq.html">
+    <meta property="og:title" content="FAQ - Spring Boot GraphQL Auto-Generator">
+    <meta property="og:description" content="Foire aux questions sur GraphQL AutoGen">
+    <meta property="og:image" content="https://tky0065.github.io/spring-boot-graphql-autogen/img/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Prism.js pour la coloration syntaxique -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .faq-item {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 20px;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .faq-question i {
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+
+        .faq-answer {
+            margin-left: 28px;
+        }
+
+        .faq-categories {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .faq-category {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .faq-category:hover, .faq-category.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #f9fafb;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+                    <span>GraphQL AutoGen</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
+                <a href="index.html#getting-started" class="nav-link">Démarrage</a>
+                <a href="index.html#documentation" class="nav-link">Documentation</a>
+                <a href="index.html#examples" class="nav-link">Exemples</a>
+                <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
+                <a href="playground.html" class="nav-cta">Playground</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Content -->
+    <section class="documentation">
+        <div class="container">
+            <div class="doc-sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="quick-start-guide.html">Guide de démarrage rapide</a></li>
+                    <li><a href="annotations-reference.html">Référence des annotations</a></li>
+                    <li><a href="best-practices.html">Bonnes pratiques</a></li>
+                    <li><a href="advanced-configuration.html">Configuration avancée</a></li>
+                    <li><a href="performance-optimization-guide.html">Optimisation des performances</a></li>
+                    <li><a href="troubleshooting-type-conflicts.html">Résolution des conflits de types</a></li>
+                    <li><a href="migration-guide.html">Guide de migration</a></li>
+                    <li><a href="faq.html" class="active">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="doc-content">
+                <h1><i class="fas fa-question-circle"></i> Foire Aux Questions</h1>
+
+                <div class="doc-introduction">
+                    <p>Réponses aux questions les plus fréquemment posées sur GraphQL AutoGen.</p>
+                </div>
+
+                <hr>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Rechercher une question..." id="faq-search">
+                </div>
+
+                <div class="faq-categories">
+                    <div class="faq-category active" data-category="all">Toutes</div>
+                    <div class="faq-category" data-category="general">Général</div>
+                    <div class="faq-category" data-category="config">Configuration</div>
+                    <div class="faq-category" data-category="performance">Performance</div>
+                    <div class="faq-category" data-category="troubleshooting">Dépannage</div>
+                    <div class="faq-category" data-category="security">Sécurité</div>
+                </div>
+
+                <div class="faq-list">
+                    <!-- Questions Générales -->
+                    <div class="faq-item" data-category="general">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Qu'est-ce que GraphQL AutoGen ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>GraphQL AutoGen est une bibliothèque pour Spring Boot qui génère automatiquement une API GraphQL complète à partir de vos entités JPA et contrôleurs Spring, sans avoir à écrire manuellement des schémas GraphQL ou des resolvers complexes.</p>
+                            <p>Il réduit considérablement le code boilerplate nécessaire pour créer une API GraphQL et s'intègre parfaitement avec l'écosystème Spring.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="general">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            GraphQL AutoGen est-il adapté aux projets en production ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Oui, GraphQL AutoGen est conçu pour être utilisé dans des environnements de production. La version 1.0.0 est une version stable qui a été testée sur des applications réelles à grande échelle.</p>
+                            <p>Il inclut des fonctionnalités importantes comme la gestion automatique des requêtes N+1, la pagination, la mise en cache, et s'intègre avec Spring Security pour l'autorisation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Questions de Configuration -->
+                    <div class="faq-item" data-category="config">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Comment configurer GraphQL AutoGen dans un projet Spring Boot existant ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>L'intégration de GraphQL AutoGen dans un projet Spring Boot existant est simple :</p>
+                            <ol>
+                                <li>Ajoutez la dépendance Maven/Gradle</li>
+                                <li>Annotez vos entités JPA avec <code>@GraphQLType</code></li>
+                                <li>Annotez vos méthodes de contrôleur avec <code>@GraphQLQuery</code>, <code>@GraphQLMutation</code>, etc.</li>
+                                <li>Exécutez votre application</li>
+                            </ol>
+                            <p>Consultez le <a href="quick-start-guide.html">guide de démarrage rapide</a> pour des instructions détaillées.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="config">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Comment personnaliser les noms des types et champs GraphQL ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Vous pouvez personnaliser les noms des types et champs GraphQL en utilisant les annotations :</p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Exemple</span>
+                                </div>
+                                <pre><code class="language-java">@Entity
+@GraphQLType(name = "Produit", description = "Un produit dans le catalogue")
+public class Product {
+    @Id
+    private Long id;
+
+    @GraphQLField(name = "nom", description = "Nom du produit")
+    private String name;
+
+    // ...
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Questions de Performance -->
+                    <div class="faq-item" data-category="performance">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Comment GraphQL AutoGen gère-t-il le problème des requêtes N+1 ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>GraphQL AutoGen résout automatiquement le problème des requêtes N+1 en générant des DataLoaders pour les relations entre entités JPA :</p>
+                            <ul>
+                                <li>Pour les relations <code>@OneToOne</code> et <code>@ManyToOne</code>, il crée des DataLoaders qui regroupent les requêtes pour les entités associées.</li>
+                                <li>Pour les relations <code>@OneToMany</code> et <code>@ManyToMany</code>, il crée des DataLoaders qui chargent efficacement les collections.</li>
+                            </ul>
+                            <p>Vous pouvez également personnaliser le comportement des DataLoaders avec l'annotation <code>@GraphQLDataLoader</code> :</p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Exemple</span>
+                                </div>
+                                <pre><code class="language-java">@ManyToOne
+@GraphQLField
+@GraphQLDataLoader(batchSize = 100)
+private Category category;</code></pre>
+                            </div>
+                            <p>Consultez le <a href="performance-optimization-guide.html">guide d'optimisation des performances</a> pour plus de détails.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="performance">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Comment implémenter la pagination avec GraphQL AutoGen ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>GraphQL AutoGen supporte deux types de pagination :</p>
+                            <p><strong>1. Pagination offset-based avec Spring Data</strong></p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Pagination simple</span>
+                                </div>
+                                <pre><code class="language-java">@GraphQLQuery
+public Page<Product> getProducts(
+        @GraphQLArgument int page,
+        @GraphQLArgument int size) {
+    return productRepository.findAll(PageRequest.of(page, size));
+}</code></pre>
+                            </div>
+                            <p><strong>2. Pagination cursor-based (style Relay)</strong></p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Pagination Relay</span>
+                                </div>
+                                <pre><code class="language-java">@GraphQLQuery
+public Connection<Product> getProductsConnection(
+        @GraphQLArgument int first,
+        @GraphQLArgument String after) {
+    // Implémentation avec ConnectionFactory
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Questions de Dépannage -->
+                    <div class="faq-item" data-category="troubleshooting">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            J'obtiens une erreur "Type already defined". Comment résoudre ce problème ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Cette erreur se produit lorsque deux ou plusieurs classes Java tentent de générer des types GraphQL avec le même nom. Pour résoudre ce problème :</p>
+                            <ol>
+                                <li>Utilisez l'attribut <code>name</code> de l'annotation <code>@GraphQLType</code> pour attribuer un nom unique à chaque type :</li>
+                            </ol>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Solution</span>
+                                </div>
+                                <pre><code class="language-java">// Dans un package
+@GraphQLType(name = "AdminUser")
+public class User { ... }
+
+// Dans un autre package
+@GraphQLType(name = "CustomerUser")
+public class User { ... }</code></pre>
+                            </div>
+                            <p>Ou activez les espaces de noms basés sur les packages :</p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>application.properties</span>
+                                </div>
+                                <pre><code class="language-properties">graphql.autogen.use-package-namespaces=true</code></pre>
+                            </div>
+                            <p>Pour plus d'informations, consultez le <a href="troubleshooting-type-conflicts.html">guide de résolution des conflits de types</a>.</p>
+                        </div>
+                    </div>
+
+                    <!-- Questions de Sécurité -->
+                    <div class="faq-item" data-category="security">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Comment sécuriser mon API GraphQL avec Spring Security ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>GraphQL AutoGen s'intègre parfaitement avec Spring Security. Vous pouvez sécuriser votre API GraphQL de plusieurs façons :</p>
+                            <p><strong>1. Sécurisation au niveau des méthodes</strong></p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Exemple</span>
+                                </div>
+                                <pre><code class="language-java">@GraphQLQuery
+@PreAuthorize("hasRole('ADMIN')")
+public List<User> getAllUsers() {
+    return userRepository.findAll();
+}</code></pre>
+                            </div>
+                            <p><strong>2. Sécurisation au niveau de l'endpoint</strong></p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Configuration</span>
+                                </div>
+                                <pre><code class="language-java">@Configuration
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(auth -> {
+                auth.requestMatchers("/graphql").authenticated();
+                auth.requestMatchers("/graphiql").hasRole("ADMIN");
+            })
+            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+            .build();
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" data-category="security">
+                        <div class="faq-question">
+                            <i class="fas fa-angle-right"></i>
+                            Comment limiter la profondeur des requêtes GraphQL pour prévenir les attaques DoS ?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Vous pouvez configurer des limites pour les requêtes GraphQL afin de prévenir les attaques par déni de service :</p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>application.properties</span>
+                                </div>
+                                <pre><code class="language-properties"># Limiter la profondeur des requêtes
+graphql.autogen.max-query-depth=10
+
+# Limiter la complexité des requêtes
+graphql.autogen.max-query-complexity=100
+
+# Limiter la taille des requêtes
+spring.graphql.graphiql.enabled=true
+spring.graphql.websocket.connection-init-timeout=60s</code></pre>
+                            </div>
+                            <p>Vous pouvez également implémenter un validateur personnalisé :</p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Validateur personnalisé</span>
+                                </div>
+                                <pre><code class="language-java">@Component
+public class CustomQueryValidator implements Instrumentation {
+    // Implémentation personnalisée
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="not-found-message" style="display: none; text-align: center; margin: 30px 0;">
+                    <i class="fas fa-search" style="font-size: 2rem; color: #d1d5db; margin-bottom: 15px;"></i>
+                    <p>Aucune question correspondant à votre recherche n'a été trouvée.</p>
+                    <p>Vous pouvez <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">nous contacter</a> si vous avez une question spécifique.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="./js/app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des questions FAQ
+            const faqQuestions = document.querySelectorAll('.faq-question');
+
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+
+                    if (answer.style.display === 'none' || answer.style.display === '') {
+                        answer.style.display = 'block';
+                        icon.classList.remove('fa-angle-right');
+                        icon.classList.add('fa-angle-down');
+                    } else {
+                        answer.style.display = 'none';
+                        icon.classList.remove('fa-angle-down');
+                        icon.classList.add('fa-angle-right');
+                    }
+                });
+            });
+
+            // Filtrage par catégorie
+            const categoryButtons = document.querySelectorAll('.faq-category');
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+
+                    // Mettre à jour les boutons actifs
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Filtrer les éléments
+                    faqItems.forEach(item => {
+                        if (category === 'all' || item.getAttribute('data-category') === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Vérifier s'il y a des résultats
+                    checkResults();
+                });
+            });
+
+            // Recherche
+            const searchInput = document.getElementById('faq-search');
+            const notFoundMessage = document.querySelector('.not-found-message');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Vérifier s'il y a des résultats
+                checkResults();
+            });
+
+            function checkResults() {
+                const visibleItems = Array.from(faqItems).filter(item => item.style.display !== 'none');
+
+                if (visibleItems.length === 0) {
+                    notFoundMessage.style.display = 'block';
+                } else {
+                    notFoundMessage.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

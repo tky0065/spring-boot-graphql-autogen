@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Référence des Annotations - Spring Boot GraphQL Auto-Generator</title>
+    <meta name="description" content="Guide complet de toutes les annotations GraphQL AutoGen">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://enokdev.github.io/spring-boot-graphql-autogen/annotations-reference.html">
+    <meta property="og:title" content="Référence des Annotations - Spring Boot GraphQL Auto-Generator">
+    <meta property="og:description" content="Guide complet de toutes les annotations GraphQL AutoGen">
+    <meta property="og:image" content="https://enokdev.github.io/spring-boot-graphql-autogen/img/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Prism.js pour la coloration syntaxique -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+                    <span>GraphQL AutoGen</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
+                <a href="index.html#getting-started" class="nav-link">Démarrage</a>
+                <a href="index.html#documentation" class="nav-link">Documentation</a>
+                <a href="index.html#examples" class="nav-link">Exemples</a>
+                <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
+                <a href="playground.html" class="nav-cta">Playground</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Content -->
+    <section class="documentation">
+        <div class="container">
+            <div class="doc-sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="quick-start-guide.html">Guide de démarrage rapide</a></li>
+                    <li><a href="annotations-reference.html" class="active">Référence des annotations</a></li>
+                    <li><a href="best-practices.html">Bonnes pratiques</a></li>
+                    <li><a href="advanced-configuration.html">Configuration avancée</a></li>
+                    <li><a href="performance-optimization-guide.html">Optimisation des performances</a></li>
+                    <li><a href="troubleshooting-type-conflicts.html">Résolution des conflits de types</a></li>
+                    <li><a href="migration-guide.html">Guide de migration</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="doc-content">
+                <h1><i class="fas fa-tag"></i> Référence complète des annotations</h1>
+
+                <div class="doc-introduction">
+                    <p class="centered-text"><strong>Guide complet de toutes les annotations GraphQL AutoGen</strong></p>
+                    <p class="centered-text"><em>16 annotations pour couvrir tous vos besoins GraphQL</em></p>
+                </div>
+
+                <hr>
+
+                <h2>📚 Table des matières</h2>
+                <ul class="toc">
+                    <li><a href="#annotations-types">🏷️ Annotations de Types</a></li>
+                    <li><a href="#annotations-champs">🔍 Annotations de Champs</a></li>
+                    <li><a href="#annotations-operations">⚡ Annotations d'Opérations</a></li>
+                    <li><a href="#annotations-entree">📥 Annotations d'Entrée</a></li>
+                    <li><a href="#annotations-avancees">🔄 Annotations Avancées</a></li>
+                    <li><a href="#conventions">📖 Conventions et Bonnes Pratiques</a></li>
+                </ul>
+
+                <section id="annotations-types">
+                    <h2>🏷️ Annotations de Types</h2>
+
+                    <div class="annotation-card">
+                        <h3>@GraphQLType</h3>
+                        <div class="annotation-description">
+                            <p>Transforme une classe Java en type GraphQL. C'est l'annotation fondamentale pour exposer vos entités via GraphQL.</p>
+                        </div>
+                        <div class="annotation-example">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Exemple</span>
+                                </div>
+                                <pre><code class="language-java">@Entity
+@GraphQLType
+public class Product {
+    @Id @GeneratedValue
+    private Long id;
+
+    private String name;
+    private Double price;
+
+    // Getters et setters
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ajoutez d'autres annotations de types ici -->
+                </section>
+
+                <section id="annotations-champs">
+                    <h2>🔍 Annotations de Champs</h2>
+
+                    <div class="annotation-card">
+                        <h3>@GraphQLField</h3>
+                        <div class="annotation-description">
+                            <p>Personnalise un champ GraphQL ou l'inclut explicitement (lorsque l'inclusion automatique est désactivée).</p>
+                        </div>
+                        <div class="annotation-example">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Exemple</span>
+                                </div>
+                                <pre><code class="language-java">@GraphQLType
+public class Product {
+    @GraphQLField(description = "Identifiant unique du produit")
+    private Long id;
+
+    @GraphQLField(name = "productName")
+    private String name;
+
+    // Autres champs
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ajoutez d'autres annotations de champs ici -->
+                </section>
+
+                <section id="annotations-operations">
+                    <h2>⚡ Annotations d'Opérations</h2>
+
+                    <div class="annotation-card">
+                        <h3>@GraphQLQuery</h3>
+                        <div class="annotation-description">
+                            <p>Expose une méthode comme requête GraphQL dans le schéma.</p>
+                        </div>
+                        <div class="annotation-example">
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Exemple</span>
+                                </div>
+                                <pre><code class="language-java">@RestController
+public class ProductController {
+    private final ProductRepository productRepository;
+
+    @GraphQLQuery
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @GraphQLQuery(name = "product")
+    public Optional<Product> getProductById(@GraphQLArgument Long id) {
+        return productRepository.findById(id);
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ajoutez d'autres annotations d'opérations ici -->
+                </section>
+
+                <!-- Continuer avec les autres sections -->
+
+                <section id="conventions">
+                    <h2>📖 Conventions et Bonnes Pratiques</h2>
+
+                    <p>Pour une utilisation optimale des annotations GraphQL AutoGen, suivez ces conventions et bonnes pratiques :</p>
+
+                    <ul>
+                        <li><strong>Nommage cohérent</strong> - Utilisez des noms clairs et significatifs pour vos types et champs.</li>
+                        <li><strong>Documentation complète</strong> - Ajoutez toujours des descriptions à vos types et champs pour améliorer l'autodocumentation du schéma.</li>
+                        <li><strong>Types non-nullables</strong> - Par défaut, considérez tous les champs comme non-nullables sauf indication contraire.</li>
+                        <li><strong>Architecture par domaines</strong> - Organisez vos requêtes et mutations par domaines métier pour une meilleure maintenabilité.</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Avancée - Spring Boot GraphQL Auto-Generator</title>
+    <meta name="description" content="Options de configuration avancées pour GraphQL AutoGen">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tky0065.github.io/spring-boot-graphql-autogen/advanced-configuration.html">
+    <meta property="og:title" content="Configuration Avancée - Spring Boot GraphQL Auto-Generator">
+    <meta property="og:description" content="Options de configuration avancées pour GraphQL AutoGen">
+    <meta property="og:image" content="https://tky0065.github.io/spring-boot-graphql-autogen/img/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Prism.js pour la coloration syntaxique -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+                    <span>GraphQL AutoGen</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
+                <a href="index.html#getting-started" class="nav-link">Démarrage</a>
+                <a href="index.html#documentation" class="nav-link">Documentation</a>
+                <a href="index.html#examples" class="nav-link">Exemples</a>
+                <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
+                <a href="playground.html" class="nav-cta">Playground</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Content -->
+    <section class="documentation">
+        <div class="container">
+            <div class="doc-sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="quick-start-guide.html">Guide de démarrage rapide</a></li>
+                    <li><a href="annotations-reference.html">Référence des annotations</a></li>
+                    <li><a href="best-practices.html">Bonnes pratiques</a></li>
+                    <li><a href="advanced-configuration.html" class="active">Configuration avancée</a></li>
+                    <li><a href="performance-optimization-guide.html">Optimisation des performances</a></li>
+                    <li><a href="troubleshooting-type-conflicts.html">Résolution des conflits de types</a></li>
+                    <li><a href="migration-guide.html">Guide de migration</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="doc-content">
+                <h1><i class="fas fa-sliders-h"></i> Configuration Avancée</h1>
+
+                <div class="doc-introduction">
+                    <p>Ce guide présente les options de configuration avancées de GraphQL AutoGen pour personnaliser complètement votre API GraphQL.</p>
+                </div>
+
+                <hr>
+
+                <h2><i class="fas fa-cog"></i> Configuration par Propriétés</h2>
+
+                <p>GraphQL AutoGen offre de nombreuses options de configuration via les propriétés Spring Boot dans votre fichier <code>application.properties</code> ou <code>application.yml</code>.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>application.properties</span>
+                    </div>
+                    <pre><code class="language-properties"># Configuration globale
+graphql.autogen.enabled=true
+graphql.autogen.base-package=com.example
+graphql.autogen.schema-name=MySchema
+
+# Options de génération
+graphql.autogen.include-nullability-info=true
+graphql.autogen.add-introspection-fields=true
+graphql.autogen.include-schema-definition=true
+
+# Comportement des scanners
+graphql.autogen.scan-entities=true
+graphql.autogen.scan-controllers=true
+graphql.autogen.scan-services=false
+
+# DataLoaders
+graphql.autogen.enable-dataloaders=true
+graphql.autogen.dataloader-batch-size=100
+graphql.autogen.dataloader-timeout=2000</code></pre>
+                </div>
+
+                <p>Vous pouvez également utiliser la syntaxe YAML :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>application.yml</span>
+                    </div>
+                    <pre><code class="language-yaml">graphql:
+  autogen:
+    enabled: true
+    base-package: com.example
+    schema-name: MySchema
+    include-nullability-info: true
+    add-introspection-fields: true
+    include-schema-definition: true
+    scan-entities: true
+    scan-controllers: true
+    scan-services: false
+    enable-dataloaders: true
+    dataloader-batch-size: 100
+    dataloader-timeout: 2000</code></pre>
+                </div>
+
+                <h2><i class="fas fa-plug"></i> Configuration Programmatique</h2>
+
+                <p>Pour une configuration plus avancée, vous pouvez créer un bean de configuration personnalisé :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>GraphQLAutoGenConfig.java</span>
+                    </div>
+                    <pre><code class="language-java">@Configuration
+public class GraphQLAutoGenConfig {
+
+    @Bean
+    public GraphQLAutoGenConfigurer graphqlAutoGenConfigurer() {
+        return new GraphQLAutoGenConfigurer()
+            .setBasePackage("com.example")
+            .setSchemaName("MySchema")
+            .setIncludeNullabilityInfo(true)
+            .setAddIntrospectionFields(true)
+            .setIncludeSchemaDefinition(true)
+            .setScanEntities(true)
+            .setScanControllers(true)
+            .setScanServices(false)
+            .setEnableDataLoaders(true)
+            .setDataLoaderBatchSize(100)
+            .setDataLoaderTimeout(Duration.ofMillis(2000));
+    }
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-puzzle-piece"></i> Personnalisation des Resolvers</h2>
+
+                <h3>Resolvers personnalisés</h3>
+
+                <p>Vous pouvez créer vos propres resolvers GraphQL :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>ProductResolver.java</span>
+                    </div>
+                    <pre><code class="language-java">@Component
+public class ProductResolver implements GraphQLResolver<Product> {
+
+    private final CategoryRepository categoryRepository;
+
+    public ProductResolver(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    @GraphQLField
+    public Category category(Product product, DataFetchingEnvironment env) {
+        // Logique personnalisée pour résoudre la catégorie d'un produit
+        return categoryRepository.findById(product.getCategoryId()).orElse(null);
+    }
+}</code></pre>
+                </div>
+
+                <h3>Resolvers avec DataLoader</h3>
+
+                <p>Création d'un DataLoader personnalisé pour optimiser les requêtes :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>CategoryBatchLoader.java</span>
+                    </div>
+                    <pre><code class="language-java">@Component
+public class CategoryBatchLoader implements BatchLoader<Long, Category> {
+
+    private final CategoryRepository categoryRepository;
+
+    public CategoryBatchLoader(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    @Override
+    public CompletionStage<List<Category>> load(List<Long> categoryIds) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<Category> categories = categoryRepository.findAllById(categoryIds);
+            Map<Long, Category> categoryMap = categories.stream()
+                    .collect(Collectors.toMap(Category::getId, Function.identity()));
+
+            return categoryIds.stream()
+                    .map(id -> categoryMap.getOrDefault(id, null))
+                    .collect(Collectors.toList());
+        });
+    }
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-shield-alt"></i> Intégration avec Spring Security</h2>
+
+                <p>Configurer la sécurité pour vos requêtes GraphQL :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>GraphQLSecurityConfig.java</span>
+                    </div>
+                    <pre><code class="language-java">@Configuration
+@EnableWebSecurity
+public class GraphQLSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> {
+                auth.requestMatchers("/graphql").permitAll();
+                auth.requestMatchers("/graphiql").hasRole("ADMIN");
+                auth.anyRequest().authenticated();
+            })
+            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+            .build();
+    }
+
+    @Bean
+    public GraphQLDirectiveWiringCustomizer directiveWiringCustomizer() {
+        return wiringCustomizer -> {
+            // Ajouter la directive @auth pour sécuriser les champs
+            wiringCustomizer.setDirectiveWiringFactory(new AuthDirectiveWiring());
+        };
+    }
+}</code></pre>
+                </div>
+
+                <h2><i class="fas fa-microchip"></i> Personnalisation du Moteur GraphQL</h2>
+
+                <p>Vous pouvez également personnaliser le moteur GraphQL sous-jacent :</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>CustomGraphQLEngineConfig.java</span>
+                    </div>
+                    <pre><code class="language-java">@Configuration
+public class CustomGraphQLEngineConfig {
+
+    @Bean
+    public GraphQL graphQL(GraphQLSchema schema) {
+        return GraphQL.newGraphQL(schema)
+            .queryExecutionStrategy(new AsyncExecutionStrategy())
+            .mutationExecutionStrategy(new AsyncSerialExecutionStrategy())
+            .subscriptionExecutionStrategy(new SubscriptionExecutionStrategy())
+            .instrumentation(new RequestLoggingInstrumentation())
+            .build();
+    }
+
+    @Bean
+    public GraphQLSchemaCustomizer schemaCustomizer() {
+        return schema -> {
+            // Personnaliser le schéma avant qu'il soit construit
+            return SchemaTransformer.transformSchema(schema);
+        };
+    }
+}</code></pre>
+                </div>
+
+                <div class="next-steps">
+                    <p>Pour optimiser les performances de votre API GraphQL, consultez notre <a href="performance-optimization-guide.html">guide d'optimisation des performances</a>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
+

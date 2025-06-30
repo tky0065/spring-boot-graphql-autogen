@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide de Migration - Spring Boot GraphQL Auto-Generator</title>
+    <meta name="description" content="Comment migrer entre les différentes versions de GraphQL AutoGen">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tky0065.github.io/spring-boot-graphql-autogen/migration-guide.html">
+    <meta property="og:title" content="Guide de Migration - Spring Boot GraphQL Auto-Generator">
+    <meta property="og:description" content="Comment migrer entre les différentes versions de GraphQL AutoGen">
+    <meta property="og:image" content="https://tky0065.github.io/spring-boot-graphql-autogen/img/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Prism.js pour la coloration syntaxique -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+                    <span>GraphQL AutoGen</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
+                <a href="index.html#getting-started" class="nav-link">Démarrage</a>
+                <a href="index.html#documentation" class="nav-link">Documentation</a>
+                <a href="index.html#examples" class="nav-link">Exemples</a>
+                <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
+                <a href="playground.html" class="nav-cta">Playground</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Content -->
+    <section class="documentation">
+        <div class="container">
+            <div class="doc-sidebar">
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="quick-start-guide.html">Guide de démarrage rapide</a></li>
+                    <li><a href="annotations-reference.html">Référence des annotations</a></li>
+                    <li><a href="best-practices.html">Bonnes pratiques</a></li>
+                    <li><a href="advanced-configuration.html">Configuration avancée</a></li>
+                    <li><a href="performance-optimization-guide.html">Optimisation des performances</a></li>
+                    <li><a href="troubleshooting-type-conflicts.html">Résolution des conflits de types</a></li>
+                    <li><a href="migration-guide.html" class="active">Guide de migration</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="doc-content">
+                <h1><i class="fas fa-exchange-alt"></i> Guide de Migration</h1>
+
+                <div class="doc-introduction">
+                    <p>Ce guide vous aide à migrer entre les différentes versions de GraphQL AutoGen, en détaillant les changements majeurs et les étapes nécessaires pour mettre à niveau votre application.</p>
+                </div>
+
+                <hr>
+
+                <h2><i class="fas fa-code-branch"></i> Migration vers la version 1.0.0</h2>
+
+                <div class="version-info">
+                    <span class="version-badge">1.0.0</span>
+                    <span class="release-date">30 juin 2025</span>
+                    <span class="stability-badge stable">Stable</span>
+                </div>
+
+                <p>La version 1.0.0 est la première version stable de GraphQL AutoGen. Si vous utilisez une version snapshot antérieure, voici les étapes pour migrer :</p>
+
+                <h3>Changements majeurs</h3>
+
+                <ul>
+                    <li><strong>Changements de noms d'annotations</strong> : Certaines annotations ont été renommées pour plus de clarté</li>
+                    <li><strong>Comportement par défaut des DataLoaders</strong> : Les DataLoaders sont désormais activés par défaut pour les relations JPA</li>
+                    <li><strong>Nouvelle configuration du schéma</strong> : Options de configuration supplémentaires disponibles</li>
+                </ul>
+
+                <h3>Étapes de migration</h3>
+
+                <ol>
+                    <li>
+                        <h4>Mettre à jour la dépendance Maven/Gradle</h4>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>pom.xml</span>
+                            </div>
+                            <pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.enokdev&lt;/groupId&gt;
+    &lt;artifactId&gt;graphql-autogen-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <h4>Renommer les annotations</h4>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Avant</span>
+                            </div>
+                            <pre><code class="language-java">@GraphQLAutoGenType
+public class Product {
+    @GraphQLAutoGenField(name = "productName")
+    private String name;
+}</code></pre>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Après</span>
+                            </div>
+                            <pre><code class="language-java">@GraphQLType
+public class Product {
+    @GraphQLField(name = "productName")
+    private String name;
+}</code></pre>
+                        </div>
+
+                        <p>Vous pouvez utiliser notre script de migration pour automatiser ce processus :</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Terminal</span>
+                            </div>
+                            <pre><code class="language-bash">curl -L https://raw.githubusercontent.com/tky0065/spring-boot-graphql-autogen/main/scripts/rename-annotations.sh | bash</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <h4>Mettre à jour la configuration</h4>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>application.properties</span>
+                            </div>
+                            <pre><code class="language-properties"># Anciennes propriétés
+# graphql.autogen.auto-dataloader=true
+# graphql.autogen.scan-package=com.example
+
+# Nouvelles propriétés
+graphql.autogen.enable-dataloaders=true
+graphql.autogen.base-package=com.example</code></pre>
+                        </div>
+                    </li>
+                </ol>
+
+                <div class="migration-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <p><strong>Note</strong> : Si vous rencontrez des problèmes avec les DataLoaders automatiques, vous pouvez les désactiver temporairement en utilisant <code>graphql.autogen.enable-dataloaders=false</code> et les activer progressivement par la suite.</p>
+                </div>
+
+                <h2><i class="fas fa-code-branch"></i> Migration depuis Spring GraphQL natif</h2>
+
+                <p>Si vous utilisez Spring GraphQL natif et souhaitez migrer vers GraphQL AutoGen, suivez ces étapes :</p>
+
+                <h3>Étapes de migration</h3>
+
+                <ol>
+                    <li>
+                        <h4>Ajouter la dépendance GraphQL AutoGen</h4>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>pom.xml</span>
+                            </div>
+                            <pre><code class="language-xml">&lt;!-- Conserver la dépendance Spring GraphQL existante --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-graphql&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Ajouter GraphQL AutoGen --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.enokdev&lt;/groupId&gt;
+    &lt;artifactId&gt;graphql-autogen-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <h4>Supprimer les fichiers schema GraphQL (.graphqls)</h4>
+                        <p>GraphQL AutoGen génère automatiquement le schéma à partir de vos classes Java annotées.</p>
+                    </li>
+                    <li>
+                        <h4>Annoter vos entités JPA</h4>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Product.java</span>
+                            </div>
+                            <pre><code class="language-java">@Entity
+@GraphQLType // Ajouter cette annotation
+public class Product {
+    @Id @GeneratedValue
+    private Long id;
+
+    private String name;
+    private String description;
+    private BigDecimal price;
+
+    // Relations JPA existantes
+    @ManyToOne
+    private Category category;
+
+    // Getters et setters
+}</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <h4>Migrer vos resolvers GraphQL</h4>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Avant (Spring GraphQL)</span>
+                            </div>
+                            <pre><code class="language-java">@Controller
+public class ProductController {
+
+    private final ProductRepository productRepository;
+
+    @QueryMapping
+    public List<Product> products() {
+        return productRepository.findAll();
+    }
+
+    @QueryMapping
+    public Optional<Product> product(@Argument Long id) {
+        return productRepository.findById(id);
+    }
+}</code></pre>
+                        </div>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Après (GraphQL AutoGen)</span>
+                            </div>
+                            <pre><code class="language-java">@RestController // ou garder @Controller
+public class ProductController {
+
+    private final ProductRepository productRepository;
+
+    @GraphQLQuery(name = "products")
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @GraphQLQuery(name = "product")
+    public Optional<Product> getProductById(@GraphQLArgument Long id) {
+        return productRepository.findById(id);
+    }
+}</code></pre>
+                        </div>
+                    </li>
+                </ol>
+
+                <h2><i class="fas fa-code-branch"></i> Plans futurs et compatibilité</h2>
+
+                <div class="version-roadmap">
+                    <h3>Feuille de route des versions</h3>
+
+                    <div class="version-item">
+                        <div class="version-header">
+                            <span class="version-badge future">1.1.0</span>
+                            <span class="release-date">Septembre 2025</span>
+                        </div>
+                        <ul>
+                            <li>Support amélioré pour les directives GraphQL</li>
+                            <li>Génération de documentation automatisée</li>
+                            <li>Optimisations de performance pour les grands schémas</li>
+                        </ul>
+                    </div>
+
+                    <div class="version-item">
+                        <div class="version-header">
+                            <span class="version-badge future">1.2.0</span>
+                            <span class="release-date">Décembre 2025</span>
+                        </div>
+                        <ul>
+                            <li>Support des abonnements GraphQL (subscriptions)</li>
+                            <li>Intégration avec GraphQL Federation</li>
+                            <li>Personnalisation avancée du validateur de schéma</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="next-steps">
+                    <p>Vous avez des questions sur GraphQL AutoGen ? Consultez notre <a href="faq.html">FAQ</a> pour trouver des réponses aux questions fréquemment posées.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground GraphQL - Spring Boot GraphQL Auto-Generator</title>
+    <meta name="description" content="Testez et expérimentez avec GraphQL AutoGen directement dans votre navigateur">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tky0065.github.io/spring-boot-graphql-autogen/playground.html">
+    <meta property="og:title" content="Playground GraphQL - Spring Boot GraphQL Auto-Generator">
+    <meta property="og:description" content="Testez et expérimentez avec GraphQL AutoGen directement dans votre navigateur">
+    <meta property="og:image" content="https://tky0065.github.io/spring-boot-graphql-autogen/img/social-preview.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- GraphiQL CSS -->
+    <link href="https://unpkg.com/graphiql/graphiql.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        #graphiql {
+            height: 600px;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .playground-container {
+            padding: 20px 0;
+        }
+
+        .playground-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .playground-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .playground-tab {
+            padding: 8px 16px;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-weight: 500;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-bottom: none;
+        }
+
+        .playground-tab.active {
+            background: #ffffff;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .example-query-section {
+            margin-top: 30px;
+        }
+
+        .example-query-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-query-card:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+        }
+
+        .example-query-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .endpoint-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .endpoint-selector label {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .endpoint-selector input {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+                    <span>GraphQL AutoGen</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html#features" class="nav-link">Fonctionnalités</a>
+                <a href="index.html#getting-started" class="nav-link">Démarrage</a>
+                <a href="index.html#documentation" class="nav-link">Documentation</a>
+                <a href="index.html#examples" class="nav-link">Exemples</a>
+                <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
+                <a href="playground.html" class="nav-cta active">Playground</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Playground Section -->
+    <section class="documentation">
+        <div class="container">
+            <div class="playground-container">
+                <div class="playground-header">
+                    <h1><i class="fas fa-play"></i> GraphQL Playground</h1>
+                    <div>
+                        <button id="share-btn" class="btn btn-secondary"><i class="fas fa-share-alt"></i> Partager</button>
+                    </div>
+                </div>
+
+                <p class="playground-description">
+                    Explorez et testez l'API GraphQL Auto-Generator directement dans votre navigateur. Le playground est connecté à notre API de démonstration e-commerce.
+                </p>
+
+                <div class="endpoint-selector">
+                    <label for="endpoint-url">URL Endpoint :</label>
+                    <input type="text" id="endpoint-url" value="https://demo-api.graphql-autogen.com/graphql" />
+                    <button id="connect-btn" class="btn btn-small">Connecter</button>
+                </div>
+
+                <div class="playground-tabs">
+                    <div class="playground-tab active" data-tab="main">Playground</div>
+                    <div class="playground-tab" data-tab="schema">Explorateur de schéma</div>
+                    <div class="playground-tab" data-tab="examples">Exemples</div>
+                </div>
+
+                <!-- GraphiQL Container -->
+                <div id="graphiql"></div>
+
+                <div class="example-query-section">
+                    <h2>Exemples de requêtes</h2>
+                    <p>Cliquez sur un exemple pour le charger dans le playground.</p>
+
+                    <div class="example-query-card" data-query="query GetAllProducts {
+  allProducts {
+    id
+    name
+    description
+    price
+    category {
+      name
+    }
+  }
+}">
+                        <div class="example-query-name">Récupérer tous les produits</div>
+                        <div class="example-query-description">Liste tous les produits avec leurs détails de base.</div>
+                    </div>
+
+                    <div class="example-query-card" data-query="query GetProductById($id: ID!) {
+  product(id: $id) {
+    id
+    name
+    description
+    price
+    imageUrl
+    inventory {
+      quantityInStock
+      lowStockThreshold
+    }
+    reviews {
+      id
+      rating
+      comment
+      user {
+        username
+      }
+    }
+  }
+}">
+                        <div class="example-query-name">Récupérer un produit par ID</div>
+                        <div class="example-query-description">Récupère les détails complets d'un produit, y compris le stock et les avis.</div>
+                    </div>
+
+                    <div class="example-query-card" data-query="mutation CreateOrder($input: CreateOrderInput!) {
+  createOrder(input: $input) {
+    id
+    orderNumber
+    createdAt
+    status
+    items {
+      product {
+        name
+      }
+      quantity
+      unitPrice
+    }
+    total
+  }
+}">
+                        <div class="example-query-name">Créer une nouvelle commande</div>
+                        <div class="example-query-description">Crée une commande et renvoie les détails complets.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- React, ReactDOM and GraphiQL -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/graphiql/graphiql.min.js"></script>
+
+    <script>
+        // Configuration du playground GraphiQL
+        const container = document.getElementById('graphiql');
+        let endpointUrl = document.getElementById('endpoint-url').value;
+
+        // Fonction pour initialiser GraphiQL
+        function initGraphiQL() {
+            ReactDOM.render(
+                React.createElement(GraphiQL, {
+                    fetcher: graphQLFetcher,
+                    defaultQuery: `# Bienvenue dans le playground GraphQL AutoGen !
+# Essayez une requête comme celle-ci :
+
+query {
+  allProducts(first: 5) {
+    id
+    name
+    price
+  }
+}
+`,
+                }),
+                container
+            );
+        }
+
+        // Fetcher pour GraphiQL
+        function graphQLFetcher(graphQLParams) {
+            return fetch(endpointUrl, {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(graphQLParams),
+            }).then(response => response.json());
+        }
+
+        // Initialiser GraphiQL
+        document.addEventListener('DOMContentLoaded', initGraphiQL);
+
+        // Gestion du changement d'endpoint
+        document.getElementById('connect-btn').addEventListener('click', function() {
+            endpointUrl = document.getElementById('endpoint-url').value;
+            initGraphiQL();
+        });
+
+        // Gestion des exemples de requêtes
+        document.querySelectorAll('.example-query-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const query = this.getAttribute('data-query');
+                const graphiqlInstance = container.querySelector('.graphiql');
+
+                // Accéder à l'éditeur GraphiQL et définir la requête
+                if (graphiqlInstance) {
+                    const queryEditor = graphiqlInstance.querySelector('.query-editor');
+                    // Simulation d'une sélection complète et remplacement
+                    document.execCommand('selectAll');
+                    document.execCommand('insertText', false, query);
+                }
+            });
+        });
+
+        // Partage de requête (à implémenter)
+        document.getElementById('share-btn').addEventListener('click', function() {
+            alert('Fonctionnalité de partage bientôt disponible !');
+        });
+
+        // Gestion des onglets
+        document.querySelectorAll('.playground-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.playground-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Logique de changement d'onglet (à implémenter)
+                const tabName = this.getAttribute('data-tab');
+                console.log(`Switching to tab: ${tabName}`);
+
+                // Pour l'instant, tous les onglets montrent GraphiQL
+            });
+        });
+    </script>
+</body>
+</html>
+
