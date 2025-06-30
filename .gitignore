@@ -26,3 +26,8 @@ p.txt
 /tmp/
 # OS generated files
 .DS_Store
+/graphql-autogen-core/target/
+/.idea/
+/graphql-autogen-core/target/
+/graphql-autogen-examples/ecommerce-example/target/
+/graphql-autogen-examples/target/
