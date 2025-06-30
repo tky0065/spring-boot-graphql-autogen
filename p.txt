@@ -17,3 +17,6 @@ etc.
 quant je build dans intlij le il ya des erreurs que j'ai mis dans le fichier errors.txt
 
 j'ai supprimer les modules sur les plugins je veux que tu mettre les docs en jour , on vas continue just avec la dependadance et le cli  et suprimer les fichiers inutiles dans le projet
+
+j'ai supprimer les modules sur les plugins je veux que tu mettre les docs en jour , on vas continue just avec la dependadance et le cli  et suprimer les fichiers inutiles dans le projet
+ et amiorer les site pour la docs (le style, la coerence etcs)

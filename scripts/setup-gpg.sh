@@ -45,6 +45,43 @@ fi
 
 echo "✅ GPG installé : $(gpg --version | head -n1)"
 
+# Vérifier et arrêter tous les processus GPG en cours
+echo "🔄 Vérification des processus GPG en cours..."
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    GPG_PROCESSES=$(pgrep -l gpg-agent || echo "")
+    KEYBOXD_PROCESSES=$(pgrep -l keyboxd || echo "")
+    if [ ! -z "$GPG_PROCESSES" ] || [ ! -z "$KEYBOXD_PROCESSES" ]; then
+        echo "🛑 Processus GPG en cours détectés, arrêt en cours..."
+        pkill -f gpg-agent || true
+        pkill -f keyboxd || true
+        sleep 2
+    fi
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Linux
+    GPG_PROCESSES=$(pgrep -l gpg-agent || echo "")
+    KEYBOXD_PROCESSES=$(pgrep -l keyboxd || echo "")
+    if [ ! -z "$GPG_PROCESSES" ] || [ ! -z "$KEYBOXD_PROCESSES" ]; then
+        echo "🛑 Processus GPG en cours détectés, arrêt en cours..."
+        pkill -f gpg-agent || true
+        pkill -f keyboxd || true
+        sleep 2
+    fi
+fi
+
+# Vérifier si des fichiers de verrouillage existent
+echo "🔍 Vérification des fichiers de verrouillage..."
+if [ -d ~/.gnupg ]; then
+    LOCK_FILES=$(find ~/.gnupg -name "*.lock" 2>/dev/null || echo "")
+    if [ ! -z "$LOCK_FILES" ]; then
+        echo "🔓 Suppression des fichiers de verrouillage..."
+        rm -f ~/.gnupg/*.lock 2>/dev/null || true
+        rm -f ~/.gnupg/crls.d/*.lock 2>/dev/null || true
+        rm -f ~/.gnupg/openpgp-revocs.d/*.lock 2>/dev/null || true
+        rm -f ~/.gnupg/private-keys-v1.d/*.lock 2>/dev/null || true
+    fi
+fi
+
 # Créer le fichier de configuration GPG
 echo "📝 Création de la configuration GPG..."
 
@@ -122,8 +159,6 @@ Name-Real: $GPG_USER_NAME
 Name-Email: $GPG_USER_EMAIL
 Expire-Date: 2y
 Passphrase: $GPG_PASSPHRASE
-%pubring ~/.gnupg/pubring.kbx
-%secring ~/.gnupg/secring.gpg
 # Do a commit here, so that we can later print "done" :-)
 %commit
 %echo done

@@ -6,9 +6,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.enokdev.graphql</groupId>
+        <groupId>io.github.tky0065</groupId>
         <artifactId>graphql-autogen-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+
     </parent>
 
     <artifactId>ecommerce-example</artifactId>
@@ -18,7 +19,7 @@
     <dependencies>
         <!-- GraphQL AutoGen Starter -->
         <dependency>
-            <groupId>com.enokdev.graphql</groupId>
+            <groupId>io.github.tky0065</groupId>
             <artifactId>graphql-autogen-spring-boot-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -73,6 +74,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>

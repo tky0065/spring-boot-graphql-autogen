@@ -11,7 +11,7 @@ echo "================================================="
 
 # Variables
 CENTRAL_PORTAL_URL="${CENTRAL_PORTAL_URL:-https://central.sonatype.com}"
-PROJECT_NAMESPACE="${PROJECT_NAMESPACE:-com.enokdev.graphql}"
+PROJECT_NAMESPACE="${PROJECT_NAMESPACE:-io.github.tky0065}"
 
 echo "📋 Informations du projet:"
 echo "- Namespace: $PROJECT_NAMESPACE"
@@ -58,7 +58,7 @@ echo "3. Copier username et password"
 echo ""
 
 read -p "Username Token: " CENTRAL_TOKEN_USERNAME
-read -s -p "Password Token: " CENTRAL_TOKEN_PASSWORD
+read  -p "Password Token: " CENTRAL_TOKEN_PASSWORD
 echo
 
 if [[ -z "$CENTRAL_TOKEN_USERNAME" || -z "$CENTRAL_TOKEN_PASSWORD" ]]; then
@@ -70,15 +70,50 @@ fi
 echo ""
 echo "4️⃣ Test de connexion..."
 
-RESPONSE=$(curl -s -w "%{http_code}" -u "$CENTRAL_TOKEN_USERNAME:$CENTRAL_TOKEN_PASSWORD" \
-    "$CENTRAL_PORTAL_URL/api/v1/publisher/status" -o /dev/null)
+# Créer un fichier temporaire pour stocker la réponse
+RESPONSE_FILE=$(mktemp)
 
-if [[ "$RESPONSE" == "200" ]]; then
+# Utiliser -v pour un mode verbose et sauvegarder la sortie dans un fichier
+echo "🔍 Tentative de connexion à l'API Central Portal..."
+HTTP_CODE=$(curl -v -s -w "%{http_code}" -u "$CENTRAL_TOKEN_USERNAME:$CENTRAL_TOKEN_PASSWORD" \
+    "$CENTRAL_PORTAL_URL/api/v1/publisher/status" -o "$RESPONSE_FILE" 2>&1)
+
+# Afficher le code de réponse
+echo "📊 Code de réponse HTTP: $HTTP_CODE"
+
+# En cas d'erreur, afficher des informations supplémentaires
+if [[ "$HTTP_CODE" == "200" ]]; then
     echo "✅ Authentification réussie"
 else
-    echo "❌ Échec authentification (HTTP $RESPONSE)"
-    exit 1
+    echo "❌ Échec authentification (HTTP $HTTP_CODE)"
+    echo "🔍 Détails de l'erreur:"
+    cat "$RESPONSE_FILE"
+    echo ""
+    echo "⚠️ Solutions possibles:"
+    echo "1. Vérifiez que vos identifiants sont corrects"
+    echo "2. Essayez de regénérer votre token sur $CENTRAL_PORTAL_URL"
+    echo "3. Vérifiez l'état des services Sonatype: https://status.sonatype.com/"
+    echo "4. Essayez une API alternative pour tester:"
+
+    # Tentative avec une API alternative
+    echo "🔄 Tentative avec une API alternative..."
+    ALT_HTTP_CODE=$(curl -s -w "%{http_code}" -u "$CENTRAL_TOKEN_USERNAME:$CENTRAL_TOKEN_PASSWORD" \
+        "$CENTRAL_PORTAL_URL/api/v1/components" -o /dev/null)
+    echo "📊 Code de réponse HTTP alternatif: $ALT_HTTP_CODE"
+
+    if [[ "$ALT_HTTP_CODE" == "200" ]]; then
+        echo "✅ Authentification réussie avec l'API alternative"
+        echo "⚠️ Le problème semble être spécifique à l'API de statut, mais vos identifiants fonctionnent"
+        # On continue malgré l'erreur sur la première API
+        HTTP_CODE=200
+    else
+        rm "$RESPONSE_FILE"
+        exit 1
+    fi
 fi
+
+# Nettoyage
+rm "$RESPONSE_FILE"
 
 # Configuration des variables
 echo ""

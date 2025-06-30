@@ -23,10 +23,12 @@
       <module name="ecommerce-example" options="-parameters --enable-preview" />
       <module name="graphql-autogen-cli" options="-parameters --enable-preview" />
       <module name="graphql-autogen-core" options="-parameters --enable-preview" />
+      <module name="graphql-autogen-examples" options="-parameters --enable-preview" />
       <module name="graphql-autogen-gradle-plugin" options="-parameters --enable-preview" />
       <module name="graphql-autogen-maven-plugin" options="-parameters --enable-preview" />
       <module name="graphql-autogen-spring-boot-starter" options="-parameters --enable-preview" />
       <module name="simple-library-example" options="-parameters --enable-preview" />
+      <module name="spring-boot-graphql-autogen" options="-parameters --enable-preview" />
     </option>
   </component>
 </project>
