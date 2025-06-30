@@ -27,10 +27,13 @@ public class DefaultAnnotationScanner implements AnnotationScanner {
     private static final Logger log = LoggerFactory.getLogger(DefaultAnnotationScanner.class);
     
     private static final List<Class<? extends Annotation>> GRAPHQL_ANNOTATIONS = List.of(
-        GraphQLType.class,
-        GraphQLInput.class,
-        GraphQLEnum.class,
-        GraphQLController.class
+            GType.class,
+            GraphQLType.class, // @deprecated - kept for backward compatibility
+            GraphQLInput.class,
+            GraphQLEnum.class,
+            GraphQLController.class,
+            GraphQLInterface.class,
+            GraphQLUnion.class
     );
     
     @Override
@@ -67,8 +70,8 @@ public class DefaultAnnotationScanner implements AnnotationScanner {
     
     @Override
     public Set<Class<?>> scanForGraphQLTypes(List<String> basePackages) {
-        log.debug("Scanning for @GraphQLType annotated classes");
-        return scanForSpecificAnnotation(basePackages, GraphQLType.class);
+        log.debug("Scanning for @GType annotated classes");
+        return scanForSpecificAnnotation(basePackages, GType.class);
     }
     
     @Override

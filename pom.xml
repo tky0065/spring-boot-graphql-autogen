@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,10 +15,12 @@
     <url>https://github.com/tky0065/spring-boot-graphql-autogen</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.compilerArgs>--enable-preview</maven.compiler.compilerArgs>
+
         <!-- Latest versions (June 2025) -->
         <spring-boot.version>3.3.1</spring-boot.version>
         <graphql-java.version>22.1</graphql-java.version>
@@ -33,8 +35,6 @@
     <modules>
         <module>graphql-autogen-core</module>
         <module>graphql-autogen-spring-boot-starter</module>
-        <module>graphql-autogen-maven-plugin</module>
-        <module>graphql-autogen-gradle-plugin</module>
         <module>graphql-autogen-cli</module>
         <module>graphql-autogen-examples</module>
     </modules>
@@ -49,28 +49,28 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- GraphQL Java -->
             <dependency>
                 <groupId>com.graphql-java</groupId>
                 <artifactId>graphql-java</artifactId>
                 <version>${graphql-java.version}</version>
             </dependency>
-            
+
             <!-- Reflections for annotation scanning -->
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
-            
+
             <!-- Internal modules -->
             <dependency>
                 <groupId>com.enokdev.graphql</groupId>
                 <artifactId>graphql-autogen-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+
             <!-- Test dependencies -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>

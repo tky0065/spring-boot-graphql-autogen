@@ -79,7 +79,7 @@ class CompilationTest {
     @DisplayName("Should verify package structure is correct")
     void shouldVerifyPackageStructure() {
         // Verify all classes are in the correct enokdev package
-        assertThat(GraphQLType.class.getPackageName()).startsWith("com.enokdev.graphql.autogen");
+        assertThat(GType.class.getPackageName()).startsWith("com.enokdev.graphql.autogen");
         assertThat(SchemaGenerationException.class.getPackageName()).startsWith("com.enokdev.graphql.autogen");
         assertThat(DefaultAnnotationScanner.class.getPackageName()).startsWith("com.enokdev.graphql.autogen");
         assertThat(SchemaGenerator.class.getPackageName()).startsWith("com.enokdev.graphql.autogen");

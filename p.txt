@@ -5,3 +5,15 @@ oui oui et mettre a jour au fuire a messure les task (marquer valider si termine
 
 
 continue le projet dans intelj en bassans sur le fichier PROGRESS.md et les fichiers du dossier guidline une fois une tasks terminer tu doit le marquer terminer dans le fichier guidline/graphql-autogen-tasks.md
+
+
+GraphQLType → GType
+GraphQLObjectType → GObjectType
+GraphQLArgument → GArgument
+GraphQLParam → GParam
+etc.
+
+
+quant je build dans intlij le il ya des erreurs que j'ai mis dans le fichier errors.txt
+
+j'ai supprimer les modules sur les plugins je veux que tu mettre les docs en jour , on vas continue just avec la dependadance et le cli  et suprimer les fichiers inutiles dans le projet

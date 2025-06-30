@@ -3,12 +3,9 @@ package com.enokdev.graphql.autogen.annotation;
 import java.lang.annotation.*;
 
 /**
- * Marks a method parameter as a GraphQL argument.
- * 
- * Used to customize how method parameters are exposed as GraphQL arguments.
- * 
- * @author GraphQL AutoGen Team
- * @since 1.0.0
+ * Marks a parameter as a GraphQL argument.
+ * This annotation is used to provide additional metadata for method parameters
+ * that will be used as GraphQL field arguments.
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,22 +16,34 @@ public @interface GraphQLArgument {
      * The name of the GraphQL argument.
      * If not specified, the parameter name will be used.
      */
+    String value() default "";
+    
+    /**
+     * The name of the GraphQL argument.
+     * @deprecated Use value() instead
+     */
+    @Deprecated
     String name() default "";
     
     /**
-     * Description of the GraphQL argument.
+     * The description of the GraphQL argument.
      */
     String description() default "";
     
     /**
-     * Whether this argument is required (non-null).
-     * If true, the argument will be marked as non-null (!) in GraphQL.
-     */
-    boolean required() default false;
-    
-    /**
-     * Default value for this argument.
-     * Will be used in GraphQL schema if specified.
+     * The default value for the argument.
      */
     String defaultValue() default "";
+    
+    /**
+     * Whether this argument is non-null (required).
+     */
+    boolean nonNull() default false;
+    
+    /**
+     * Whether this argument is required.
+     * @deprecated Use nonNull() instead
+     */
+    @Deprecated
+    boolean required() default false;
 }

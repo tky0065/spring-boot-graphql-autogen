@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "products")
-@GraphQLType(name = "Product", description = "A product in the e-commerce catalog")
+@GType(name = "Product", description = "A product in the e-commerce catalog")
 public class Product implements Node, Searchable {
 
     @Id
@@ -237,7 +237,7 @@ public class Product implements Node, Searchable {
 
     public void setCategory(Category category) {
         this.category = category;
-        this.categoryId = category != null ? category.getId() : null;
+        this.categoryId = category != null ? Long.valueOf(category.getId()) : null;
     }
 
     public Long getCategoryId() {

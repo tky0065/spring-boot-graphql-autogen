@@ -1,12 +1,13 @@
 package com.enokdev.graphql.cli;
 
-import com.enokdev.graphql.autogen.core.config.GraphQLAutoGenConfig;
-import com.enokdev.graphql.autogen.core.generator.DefaultSchemaGenerator;
-import com.enokdev.graphql.autogen.core.generator.SchemaGenerator;
-import com.enokdev.graphql.autogen.core.resolver.DefaultFieldResolver;
-import com.enokdev.graphql.autogen.core.resolver.DefaultOperationResolver;
-import com.enokdev.graphql.autogen.core.resolver.DefaultTypeResolver;
-import com.enokdev.graphql.autogen.core.scanner.DefaultAnnotationScanner;
+import com.enokdev.graphql.autogen.cli.CLILogger;
+import com.enokdev.graphql.autogen.config.GraphQLAutoGenConfig;
+import com.enokdev.graphql.autogen.generator.DefaultFieldResolver;
+import com.enokdev.graphql.autogen.generator.DefaultOperationResolver;
+import com.enokdev.graphql.autogen.generator.DefaultTypeResolver;
+import com.enokdev.graphql.autogen.generator.SchemaGenerator;
+import com.enokdev.graphql.autogen.generator.DefaultSchemaGenerator;
+import com.enokdev.graphql.autogen.scanner.DefaultAnnotationScanner;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
@@ -107,7 +108,8 @@ public class GenerateCommand implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         try {
-            CLILogger logger = new CLILogger(parent.isVerbose(), parent.isQuiet(), parent.isNoColor());
+            CLILogger logger = new CLILogger();
+            logger.setVerbose(parent.isVerbose());
             
             logger.info("🚀 Starting GraphQL schema generation...");
             
@@ -136,7 +138,8 @@ public class GenerateCommand implements Callable<Integer> {
             return 0;
             
         } catch (Exception e) {
-            CLILogger logger = new CLILogger(parent.isVerbose(), parent.isQuiet(), parent.isNoColor());
+            CLILogger logger = new CLILogger();
+            logger.setVerbose(parent.isVerbose());
             logger.error("❌ Schema generation failed: " + e.getMessage());
             
             if (parent.isVerbose()) {
@@ -238,20 +241,20 @@ public class GenerateCommand implements Callable<Integer> {
         // Create components
         DefaultAnnotationScanner scanner = new DefaultAnnotationScanner();
         DefaultTypeResolver typeResolver = new DefaultTypeResolver(config);
-        DefaultFieldResolver fieldResolver = new DefaultFieldResolver(config);
-        DefaultOperationResolver operationResolver = new DefaultOperationResolver(config);
+        DefaultFieldResolver fieldResolver = new DefaultFieldResolver(typeResolver);
+        DefaultOperationResolver operationResolver = new DefaultOperationResolver(typeResolver);
 
         // Create schema generator
         SchemaGenerator schemaGenerator = new DefaultSchemaGenerator(
-            scanner,
             typeResolver,
             fieldResolver,
             operationResolver,
+            scanner,
             config
         );
 
         // Scan classes
-        Set<Class<?>> scannedClasses = scanner.scanPackages(basePackages, excludePackages);
+        Set<Class<?>> scannedClasses = scanner.scanForAnnotatedClasses(basePackages);
 
         logger.info("🔍 Found " + scannedClasses.size() + " classes to process");
 
@@ -260,18 +263,18 @@ public class GenerateCommand implements Callable<Integer> {
         }
 
         // Generate schema
-        String schemaContent = schemaGenerator.generateSchema(scannedClasses);
+        String schemaContent = schemaGenerator.generateSchemaString(new ArrayList<>(scannedClasses));
 
-        logger.debug("Generated schema length: " + schemaContent.length() + " characters");
+        if (schemaContent != null) {
+            logger.debug("Generated schema length: " + schemaContent.length() + " characters");
+        }
         
-        return schemaContent;
+        return schemaContent != null ? schemaContent : "";
     }
 
     private GraphQLAutoGenConfig createConfiguration() {
         GraphQLAutoGenConfig config = new GraphQLAutoGenConfig();
         config.setGenerateInputs(generateInputs);
-        config.setIncludeInheritedFields(includeInheritedFields);
-        config.setMaxScanDepth(maxScanDepth);
         
         config.setNamingStrategy(
             GraphQLAutoGenConfig.NamingStrategy.valueOf(namingStrategy.toUpperCase())

@@ -5,7 +5,7 @@
 **Projet :** `spring-boot-graphql-autogen` avec package `com.enokdev.graphql.autogen`  
 **Objectif :** Génération automatique de schémas GraphQL à partir d'entités JPA et contrôleurs Spring Boot  
 **Date :** Juin 2025  
-**Statut global :** 🟢 **Phase 9 terminée** (Documentation et exemples - 95%)
+**Statut global :** 🟢 **Phase 10 en cours** (Publication et maintenance - 60%)
 
 ---
 
@@ -175,22 +175,48 @@
 
 ---
 
+## 🚢 Phase 10: Publication et maintenance ✅ EN COURS (60%)
+
+#### ✨ Réalisations clés :
+- **Configuration Maven Central** : Setup complet avec nouveau Central Portal
+- **CI/CD automatisé** : Workflows GitHub Actions pour release et validation
+- **Documentation publication** : Guides détaillés avec scripts automatisés
+- **Processus de release** : Pipeline complet de développement à production
+
+#### 📋 Tâches terminées :
+- [x] **Configuration Maven Central** avec central-publishing-maven-plugin
+- [x] **POM de publication** optimisé pour Central Portal
+- [x] **Settings Maven** avec user tokens
+- [x] **Scripts de configuration** (GPG + Central Portal)
+- [x] **Workflow GitHub Actions** pour releases automatisées
+- [x] **Pipeline CI/CD** multi-environnements (Ubuntu/Windows/macOS)
+- [x] **Validation PR** automatique avec checks qualité
+- [x] **Documentation publication** complète avec exemples
+
+#### 🔄 Tâches restantes :
+- [ ] Site web officiel avec documentation interactive
+- [ ] Playground en ligne pour démonstrations
+- [ ] Guidelines de contribution communautaire
+- [ ] Distribution via Homebrew/Chocolatey
+
+---
+
 ## 🎯 Prochaines phases
 
-### 🚢 Phase 10 : Publication et maintenance (PROCHAINE)
+### 🌐 Finalisation Phase 10 (EN COURS)
 
-#### 🎯 Objectifs :
-- Publication Maven Central avec artifacts signés
+#### 🎯 Objectifs restants :
 - Site web officiel avec documentation interactive
-- Processus de maintenance et releases automatisées
-- Écosystème communautaire et support
+- Écosystème communautaire complet
+- Distribution multi-plateforme
+- Processus de maintenance long terme
 
 #### 📋 Prochaines tâches prioritaires :
-- [ ] **Configuration Maven Central** avec signature GPG
-- [ ] **Site web documentation** avec exemples interactifs
-- [ ] **Processus de release** automatisé avec GitHub Actions
-- [ ] **Guidelines de contribution** pour la communauté
+- [ ] **Site web documentation** avec GitHub Pages
+- [ ] **Playground interactif** pour tester les fonctionnalités
+- [ ] **Guidelines de contribution** pour développeurs
 - [ ] **Roadmap publique** et gestion des issues
+- [ ] **Distribution Homebrew/Chocolatey** pour CLI
 
 ---
 

@@ -1,5 +1,6 @@
 package com.enokdev.graphql.cli;
 
+import com.enokdev.graphql.autogen.cli.CLILogger;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
@@ -54,7 +55,8 @@ public class ValidateCommand implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         try {
-            CLILogger logger = new CLILogger(parent.isVerbose(), parent.isQuiet(), parent.isNoColor());
+            CLILogger logger = new CLILogger();
+            logger.setVerbose(parent.isVerbose());
             
             logger.info("🔍 Validating GraphQL schema: " + schemaFile);
             
@@ -64,7 +66,8 @@ public class ValidateCommand implements Callable<Integer> {
             return 0;
             
         } catch (Exception e) {
-            CLILogger logger = new CLILogger(parent.isVerbose(), parent.isQuiet(), parent.isNoColor());
+            CLILogger logger = new CLILogger();
+            logger.setVerbose(parent.isVerbose());
             logger.error("❌ Schema validation failed: " + e.getMessage());
             
             if (parent.isVerbose()) {

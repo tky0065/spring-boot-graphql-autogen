@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "categories")
-@GraphQLType(name = "Category", description = "Product category")
+@GType(name = "Category", description = "Product category")
 public class Category implements Node {
 
     @Id

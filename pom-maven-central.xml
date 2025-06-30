@@ -64,8 +64,8 @@
     <modules>
         <module>graphql-autogen-core</module>
         <module>graphql-autogen-spring-boot-starter</module>
-        <module>graphql-autogen-maven-plugin</module>
-        <module>graphql-autogen-gradle-plugin</module>
+<!--        <module>graphql-autogen-maven-plugin</module>-->
+<!--        <module>graphql-autogen-gradle-plugin</module>-->
         <module>graphql-autogen-cli</module>
         <!-- Note: examples module exclu de la publication -->
     </modules>

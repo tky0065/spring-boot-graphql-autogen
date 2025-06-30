@@ -1,5 +1,6 @@
 package com.enokdev.graphql.cli;
 
+import com.enokdev.graphql.autogen.cli.CLILogger;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;

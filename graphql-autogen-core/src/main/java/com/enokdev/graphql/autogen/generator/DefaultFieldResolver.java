@@ -2,12 +2,12 @@ package com.enokdev.graphql.autogen.generator;
 
 import com.enokdev.graphql.autogen.annotation.*;
 import graphql.schema.*;
-import graphql.schema.GraphQLArgument;
-import graphql.schema.GraphQLType;
+// Pas d'import pour GraphQLArgument et GraphQLType pour éviter les conflits
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -123,7 +123,7 @@ public class DefaultFieldResolver implements FieldResolver {
             }
             
             // Add arguments if method has parameters
-            List<GraphQLArgument> arguments = resolveMethodArguments(method);
+            List<graphql.schema.GraphQLArgument> arguments = resolveMethodArguments(method);
             if (!arguments.isEmpty()) {
                 fieldBuilder.arguments(arguments);
             }
@@ -155,8 +155,8 @@ public class DefaultFieldResolver implements FieldResolver {
             return true;
         }
         
-        // Include if class is annotated with @GraphQLType and field is not synthetic
-        if (field.getDeclaringClass().isAnnotationPresent(GraphQLType.class)) {
+        // Include if class is annotated with @AutoGenType and field is not synthetic
+        if (field.getDeclaringClass().isAnnotationPresent(GType.class)) {
             return !field.isSynthetic();
         }
         
@@ -190,8 +190,8 @@ public class DefaultFieldResolver implements FieldResolver {
             return true;
         }
         
-        // Include getter methods for @GraphQLType classes
-        if (method.getDeclaringClass().isAnnotationPresent(GraphQLType.class)) {
+        // Include getter methods for @AutoGenType classes
+        if (method.getDeclaringClass().isAnnotationPresent(GType.class)) {
             return isGetterMethod(method);
         }
         
@@ -207,7 +207,7 @@ public class DefaultFieldResolver implements FieldResolver {
      * Resolves the GraphQL type for a field or method return type.
      */
     private GraphQLOutputType resolveFieldType(Type javaType, Object context) {
-        GraphQLType graphqlType = typeResolver.resolveType(javaType);
+        graphql.schema.GraphQLType graphqlType = typeResolver.resolveType(javaType);
         
         // Handle nullability
         boolean isNullable = true;
@@ -329,8 +329,8 @@ public class DefaultFieldResolver implements FieldResolver {
     /**
      * Resolves arguments for a method.
      */
-    private List<GraphQLArgument> resolveMethodArguments(Method method) {
-        List<GraphQLArgument> arguments = new ArrayList<>();
+    private List<graphql.schema.GraphQLArgument> resolveMethodArguments(Method method) {
+        List<graphql.schema.GraphQLArgument> arguments = new ArrayList<>();
         
         // For now, return empty list - method arguments will be handled
         // when we implement operation resolvers for queries/mutations

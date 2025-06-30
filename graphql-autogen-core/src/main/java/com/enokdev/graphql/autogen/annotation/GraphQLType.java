@@ -3,15 +3,8 @@ package com.enokdev.graphql.autogen.annotation;
 import java.lang.annotation.*;
 
 /**
- * Marks a class to be included in GraphQL schema generation as a type.
- * 
- * Can be applied to:
- * - JPA entities
- * - DTOs
- * - POJOs
- * 
- * @author GraphQL AutoGen Team
- * @since 1.0.0
+ * Marks a class as a GraphQL type.
+ * This annotation is used to explicitly define a class as a GraphQL object type.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -22,17 +15,15 @@ public @interface GraphQLType {
      * The name of the GraphQL type.
      * If not specified, the class name will be used.
      */
-    String name() default "";
+    String value() default "";
     
     /**
-     * Description of the GraphQL type.
-     * Will be included in the generated schema.
+     * The description of the GraphQL type.
      */
     String description() default "";
     
     /**
-     * Whether this type should be included in schema generation.
-     * Useful for conditional inclusion.
+     * Whether this type should be excluded from schema generation.
      */
-    boolean enabled() default true;
+    boolean exclude() default false;
 }

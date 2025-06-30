@@ -1,5 +1,6 @@
 package com.enokdev.graphql.cli;
 
+import com.enokdev.graphql.autogen.cli.CLILogger;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
@@ -23,16 +24,18 @@ public class InfoCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        CLILogger logger = new CLILogger(parent.isVerbose(), parent.isQuiet(), parent.isNoColor());
+        CLILogger logger = new CLILogger();
+        logger.setVerbose(parent.isVerbose());
         
-        logger.printHeader("GraphQL AutoGen System Information");
+        logger.info("📦 GraphQL AutoGen System Information");
+        logger.printSeparator();
         
         // Version information
         logger.info("📦 GraphQL AutoGen CLI: 1.0.0-SNAPSHOT");
         logger.info("☕ Java Version: " + System.getProperty("java.version"));
         logger.info("🏠 Java Home: " + System.getProperty("java.home"));
         logger.info("💻 OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version"));
-        logger.info("🏛️  Architecture: " + System.getProperty("os.arch"));
+        logger.info("💻 Architecture: " + System.getProperty("os.arch"));
         
         // Memory information
         Runtime runtime = Runtime.getRuntime();
@@ -41,22 +44,22 @@ public class InfoCommand implements Callable<Integer> {
         long freeMemory = runtime.freeMemory();
         long usedMemory = totalMemory - freeMemory;
         
-        logger.printSubHeader("Memory Information");
-        logger.info("📊 Max Memory: " + formatBytes(maxMemory));
-        logger.info("📊 Total Memory: " + formatBytes(totalMemory));
-        logger.info("📊 Used Memory: " + formatBytes(usedMemory));
-        logger.info("📊 Free Memory: " + formatBytes(freeMemory));
+        logger.info("📊 Memory Information:");
+        logger.info("  Max Memory: " + formatBytes(maxMemory));
+        logger.info("  Total Memory: " + formatBytes(totalMemory));
+        logger.info("  Used Memory: " + formatBytes(usedMemory));
+        logger.info("  Free Memory: " + formatBytes(freeMemory));
         
         // Classpath information
         String classPath = System.getProperty("java.class.path");
         if (classPath != null && parent.isVerbose()) {
-            logger.printSubHeader("Classpath Entries");
+            logger.info("📂 Classpath Entries:");
             String[] entries = classPath.split(System.getProperty("path.separator"));
             for (int i = 0; i < Math.min(entries.length, 10); i++) {
-                logger.debug("📂 " + entries[i]);
+                logger.debug("  " + entries[i]);
             }
             if (entries.length > 10) {
-                logger.debug("... and " + (entries.length - 10) + " more entries");
+                logger.debug("  ... and " + (entries.length - 10) + " more entries");
             }
         }
         

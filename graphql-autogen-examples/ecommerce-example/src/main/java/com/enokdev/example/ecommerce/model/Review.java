@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "reviews")
-@GraphQLType(name = "Review", description = "Customer product review")
+@GType(name = "Review", description = "Customer product review")
 public class Review implements Node {
 
     @Id

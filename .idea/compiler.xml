@@ -6,30 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="graphql-autogen-cli" />
         <module name="graphql-autogen-core" />
         <module name="graphql-autogen-spring-boot-starter" />
         <module name="ecommerce-example" />
-        <module name="simple-library-example" />
-        <module name="graphql-autogen-maven-plugin" />
-        <module name="graphql-autogen-gradle-plugin" />
-      </profile>
-      <profile name="Annotation profile for Spring Boot GraphQL Auto-Generator" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <option name="project" value="com.enokdev.graphql/graphql-autogen-cli" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/info/picocli/picocli-codegen/4.7.6/picocli-codegen-4.7.6.jar" />
-          <entry name="$MAVEN_REPOSITORY$/info/picocli/picocli/4.7.6/picocli-4.7.6.jar" />
-        </processorPath>
-        <module name="graphql-autogen-cli" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="graphql-autogen-gradle-plugin" target="21" />
+      <module name="graphql-autogen-maven-plugin" target="21" />
+      <module name="simple-library-example" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ecommerce-example" options="-parameters --enable-preview" />
-      <module name="graphql-autogen-cli" options="-parameters -Aproject=com.enokdev.graphql/graphql-autogen-cli" />
+      <module name="graphql-autogen-cli" options="-parameters --enable-preview" />
       <module name="graphql-autogen-core" options="-parameters --enable-preview" />
       <module name="graphql-autogen-gradle-plugin" options="-parameters --enable-preview" />
       <module name="graphql-autogen-maven-plugin" options="-parameters --enable-preview" />

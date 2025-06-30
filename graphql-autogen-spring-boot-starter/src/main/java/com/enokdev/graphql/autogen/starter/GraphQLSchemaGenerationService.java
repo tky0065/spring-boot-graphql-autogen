@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -77,7 +79,7 @@ public class GraphQLSchemaGenerationService {
             }
             
             // Generate schema
-            String schemaContent = schemaGenerator.generateSchema(annotatedClasses);
+            String schemaContent = schemaGenerator.generateSchemaString(new ArrayList<>(annotatedClasses));
             
             // Apply formatting and sorting if enabled
             if (properties.isFormatSchema() || properties.isSortSchema()) {
@@ -149,24 +151,23 @@ public class GraphQLSchemaGenerationService {
      * Scans for classes with GraphQL annotations.
      */
     private Set<Class<?>> scanForAnnotatedClasses(Set<String> packages) {
-        Set<Class<?>> allClasses = Set.of();
+        List<String> packageList = new ArrayList<>(packages);
         
         for (String packageName : packages) {
             if (properties.getExcludePackages().contains(packageName)) {
                 log.debug("Skipping excluded package: {}", packageName);
-                continue;
-            }
-            
-            try {
-                Set<Class<?>> packageClasses = annotationScanner.scanPackage(packageName);
-                // In a real implementation, you'd merge the sets
-                log.debug("Found {} classes in package {}", packageClasses.size(), packageName);
-            } catch (Exception e) {
-                log.error("Failed to scan package: {}", packageName, e);
+                packageList.remove(packageName);
             }
         }
         
-        return allClasses;
+        try {
+            Set<Class<?>> allClasses = annotationScanner.scanForAnnotatedClasses(packageList);
+            log.debug("Found {} classes with GraphQL annotations", allClasses.size());
+            return allClasses;
+        } catch (Exception e) {
+            log.error("Failed to scan for annotated classes", e);
+            return Set.of();
+        }
     }
 
     /**

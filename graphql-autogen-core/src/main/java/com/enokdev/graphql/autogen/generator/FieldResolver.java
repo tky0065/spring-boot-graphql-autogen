@@ -8,8 +8,6 @@ import java.util.List;
 /**
  * Interface for resolving Java fields and methods to GraphQL field definitions.
  * 
- * Handles the conversion from Java class members to GraphQL field definitions.
- * 
  * @author GraphQL AutoGen Team
  * @since 1.0.0
  */
@@ -24,10 +22,10 @@ public interface FieldResolver {
     List<GraphQLFieldDefinition> resolveFields(Class<?> clazz);
     
     /**
-     * Resolves a Java field to a GraphQL field definition.
+     * Resolves a single Java field to a GraphQL field definition.
      * 
      * @param field The Java field to resolve
-     * @return GraphQL field definition, or null if field should be ignored
+     * @return GraphQL field definition or null if field should be ignored
      */
     GraphQLFieldDefinition resolveField(Field field);
     
@@ -35,23 +33,23 @@ public interface FieldResolver {
      * Resolves a Java method to a GraphQL field definition.
      * 
      * @param method The Java method to resolve
-     * @return GraphQL field definition, or null if method should be ignored
+     * @return GraphQL field definition or null if method should be ignored
      */
     GraphQLFieldDefinition resolveMethod(Method method);
     
     /**
-     * Checks if a field should be included in GraphQL schema.
+     * Determines if a field should be included in the GraphQL schema.
      * 
      * @param field The Java field to check
-     * @return true if field should be included
+     * @return true if the field should be included
      */
     boolean shouldIncludeField(Field field);
     
     /**
-     * Checks if a method should be included in GraphQL schema.
+     * Determines if a method should be included in the GraphQL schema.
      * 
      * @param method The Java method to check
-     * @return true if method should be included
+     * @return true if the method should be included
      */
     boolean shouldIncludeMethod(Method method);
 }

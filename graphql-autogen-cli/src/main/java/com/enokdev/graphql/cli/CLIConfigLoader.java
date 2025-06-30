@@ -1,13 +1,12 @@
 package com.enokdev.graphql.cli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Loader for CLI configuration files (JSON/YAML).
+ * Loader for CLI configuration files (JSON only).
  * 
  * @author GraphQL AutoGen Team
  * @since 1.0.0
@@ -20,18 +19,19 @@ public class CLIConfigLoader {
         }
 
         String fileName = configFile.getFileName().toString().toLowerCase();
-        ObjectMapper mapper;
+        ObjectMapper mapper = new ObjectMapper();
 
-        if (fileName.endsWith(".yml") || fileName.endsWith(".yaml")) {
-            mapper = new ObjectMapper(new YAMLFactory());
-        } else if (fileName.endsWith(".json")) {
-            mapper = new ObjectMapper();
+        if (fileName.endsWith(".json")) {
+            return mapper.readValue(configFile.toFile(), CLIConfig.class);
+        } else if (fileName.endsWith(".yml") || fileName.endsWith(".yaml")) {
+            throw new IllegalArgumentException(
+                "YAML configuration files are not currently supported. " +
+                "Please use JSON format (.json) or add jackson-dataformat-yaml dependency."
+            );
         } else {
             throw new IllegalArgumentException(
-                "Unsupported configuration file format. Use .json, .yml, or .yaml"
+                "Unsupported configuration file format. Use .json format."
             );
         }
-
-        return mapper.readValue(configFile.toFile(), CLIConfig.class);
     }
 }

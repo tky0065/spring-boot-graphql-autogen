@@ -115,6 +115,15 @@ public class GraphQLAutoGenProperties {
     public Introspection getIntrospection() { return introspection; }
     public void setIntrospection(Introspection introspection) { this.introspection = introspection; }
     
+    // Convenience methods for backward compatibility
+    public boolean isValidateSchemaOnStartup() { 
+        return validation.isValidateSchemaAtStartup(); 
+    }
+    
+    public boolean isLogSchemaOnStartup() { 
+        return true; // Default to true for logging
+    }
+    
     // Nested configuration classes
     
     public static class Schema {

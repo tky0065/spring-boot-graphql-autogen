@@ -1,6 +1,6 @@
 package com.enokdev.graphql.autogen.generator;
 
-import graphql.schema.GraphQLType;
+// Pas d'import pour GraphQLType pour éviter les conflits avec l'annotation
 import java.lang.reflect.Type;
 
 /**
@@ -20,7 +20,7 @@ public interface TypeResolver {
      * @return Corresponding GraphQL type
      * @throws com.enokdev.graphql.autogen.exception.TypeResolutionException if type cannot be resolved
      */
-    GraphQLType resolveType(Class<?> javaType);
+    graphql.schema.GraphQLType resolveType(Class<?> javaType);
     
     /**
      * Resolves a Java generic type to a GraphQL type.
@@ -29,7 +29,7 @@ public interface TypeResolver {
      * @return Corresponding GraphQL type
      * @throws com.enokdev.graphql.autogen.exception.TypeResolutionException if type cannot be resolved
      */
-    GraphQLType resolveType(Type javaType);
+    graphql.schema.GraphQLType resolveType(Type javaType);
     
     /**
      * Checks if a Java type can be resolved to a GraphQL type.
@@ -54,4 +54,54 @@ public interface TypeResolver {
      * @param graphqlTypeName GraphQL type name
      */
     void registerTypeMapping(Class<?> javaType, String graphqlTypeName);
+    
+    /**
+     * Checks if a Java type should be treated as a GraphQL object type.
+     * 
+     * @param javaType The Java type to check
+     * @return true if it should be an object type
+     */
+    default boolean isObjectType(Class<?> javaType) {
+        return javaType.isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GType.class);
+    }
+    
+    /**
+     * Checks if a Java type should be treated as a GraphQL input type.
+     * 
+     * @param javaType The Java type to check
+     * @return true if it should be an input type
+     */
+    default boolean isInputType(Class<?> javaType) {
+        return javaType.isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GraphQLInput.class);
+    }
+    
+    /**
+     * Checks if a Java type should be treated as a GraphQL enum type.
+     * 
+     * @param javaType The Java type to check
+     * @return true if it should be an enum type
+     */
+    default boolean isEnumType(Class<?> javaType) {
+        return javaType.isEnum() && javaType.isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GraphQLEnum.class);
+    }
+    
+    /**
+     * Checks if a Java type should be treated as a GraphQL interface type.
+     * 
+     * @param javaType The Java type to check
+     * @return true if it should be an interface type
+     */
+    default boolean isInterfaceType(Class<?> javaType) {
+        return javaType.isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GraphQLInterface.class);
+    }
+    
+    /**
+     * Checks if a Java type should be treated as a GraphQL union type.
+     * 
+     * @param javaType The Java type to check
+     * @return true if it should be a union type
+     */
+    default boolean isUnionType(Class<?> javaType) {
+        return javaType.isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GraphQLUnion.class);
+    }
 }

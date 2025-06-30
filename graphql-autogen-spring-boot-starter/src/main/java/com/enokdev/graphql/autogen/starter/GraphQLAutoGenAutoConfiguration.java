@@ -1,8 +1,10 @@
 package com.enokdev.graphql.autogen.starter;
 
 import com.enokdev.graphql.autogen.generator.*;
+import com.enokdev.graphql.autogen.generator.GraphQLSchemaValidator;
 import com.enokdev.graphql.autogen.scanner.AnnotationScanner;
 import com.enokdev.graphql.autogen.scanner.DefaultAnnotationScanner;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -72,7 +74,15 @@ public class GraphQLAutoGenAutoConfiguration {
         DefaultTypeResolver typeResolver = new DefaultTypeResolver();
         
         // Apply custom type mappings from properties
-        properties.getTypeMapping().forEach(typeResolver::registerTypeMapping);
+        for (Map.Entry<String, String> entry : properties.getTypeMapping().entrySet()) {
+            try {
+                Class<?> javaType = Class.forName(entry.getKey());
+                typeResolver.registerTypeMapping(javaType, entry.getValue());
+                log.debug("Registered type mapping: {} -> {}", entry.getKey(), entry.getValue());
+            } catch (ClassNotFoundException e) {
+                log.warn("Cannot register type mapping for unknown class: {}", entry.getKey());
+            }
+        }
         
         return typeResolver;
     }

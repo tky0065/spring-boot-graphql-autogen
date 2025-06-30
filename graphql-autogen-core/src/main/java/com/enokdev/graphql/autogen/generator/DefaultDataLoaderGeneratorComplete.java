@@ -173,7 +173,7 @@ public class DefaultDataLoaderGeneratorComplete implements DataLoaderGenerator {
         
         // Should also have @GraphQLField (explicit or implicit)
         return field.isAnnotationPresent(GraphQLField.class) || 
-               field.getDeclaringClass().isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GraphQLType.class);
+               field.getDeclaringClass().isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GType.class);
     }
     
     @Override
@@ -191,7 +191,7 @@ public class DefaultDataLoaderGeneratorComplete implements DataLoaderGenerator {
         
         // Should also have @GraphQLField (explicit or implicit)
         return method.isAnnotationPresent(GraphQLField.class) || 
-               (method.getDeclaringClass().isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GraphQLType.class) &&
+               (method.getDeclaringClass().isAnnotationPresent(com.enokdev.graphql.autogen.annotation.GType.class) &&
                 isGetterMethod(method));
     }
     
