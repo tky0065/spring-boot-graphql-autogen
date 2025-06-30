@@ -31,12 +31,18 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css">
-    
+    <link rel="stylesheet" href="./css/playground.css">
+
     <!-- Prism.js pour la coloration syntaxique -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles spécifiques pour la section Playground -->
+    <style>
+        /* Ces styles sont maintenant dans le fichier playground.css */
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -276,13 +282,49 @@ public class Product {
     <!-- Playground Section -->
     <section id="playground" class="playground">
         <div class="container">
-            <h2 class="text-center">Playground GraphQL</h2>
+            <h2 class="text-center">
+                <i class="fas fa-gamepad"></i> Playground GraphQL
+            </h2>
             <p class="text-center">Essayez GraphQL AutoGen directement dans votre navigateur</p>
 
-            <div class="playground-preview">
-                <img src="./img/playground-preview.png" alt="GraphQL Playground" class="playground-image">
-                <div class="playground-overlay">
-                    <a href="playground.html" class="btn btn-large">Accéder au Playground</a>
+            <div class="playground-container">
+                <div class="playground-features">
+                    <div class="playground-feature">
+                        <div class="feature-icon-circle">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h4>Éditeur interactif</h4>
+                        <p>Testez vos requêtes GraphQL en temps réel avec autocomplétion</p>
+                    </div>
+
+                    <div class="playground-feature">
+                        <div class="feature-icon-circle">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h4>Explorateur de schéma</h4>
+                        <p>Naviguez dans votre schéma GraphQL généré automatiquement</p>
+                    </div>
+
+                    <div class="playground-feature">
+                        <div class="feature-icon-circle">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h4>Exemples prêts à l'emploi</h4>
+                        <p>Démarrez rapidement avec nos exemples de requêtes prédéfinis</p>
+                    </div>
+                </div>
+
+                <div class="playground-preview">
+                    <img src="./img/playground-preview.png" alt="GraphQL Playground" class="playground-image">
+                    <div class="playground-overlay">
+                        <div class="playground-overlay-content">
+                            <h3>Testez par vous-même</h3>
+                            <p>Explorer le potentiel de GraphQL AutoGen en temps réel</p>
+                            <a href="playground.html" class="btn btn-large">
+                                <i class="fas fa-play-circle"></i> Accéder au Playground
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
