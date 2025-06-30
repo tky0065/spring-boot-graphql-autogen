@@ -1,0 +1,28 @@
+/guidline/
+.idea
+p.txt
+
+# spring boot
+/target/
+# IntelliJ IDEA
+/.idea/
+# Eclipse
+/.classpath
+/.project
+/.settings/
+# NetBeans
+/nbproject/private/
+# VS Code
+/.vscode/
+# Maven
+/.mvn/
+# Gradle
+/gradle/
+# Build output
+/build/
+# Logs
+/logs/
+# Temporary files
+/tmp/
+# OS generated files
+.DS_Store
