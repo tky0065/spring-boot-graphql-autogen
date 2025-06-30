@@ -400,6 +400,75 @@ pre code {
     margin-bottom: 1.5rem;
 }
 
+/* Documentation Section Styles */
+.documentation-section {
+    padding: 5rem 0;
+    background-color: var(--bg-secondary);
+}
+
+.docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.doc-card {
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    text-decoration: none;
+    border: 1px solid #e5e7eb;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.doc-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+    text-decoration: none;
+}
+
+.doc-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    background-color: var(--bg-tertiary);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc-title {
+    font-size: 1.5rem;
+    color: var(--bg-dark);
+    margin-bottom: 1rem;
+}
+
+.doc-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    flex-grow: 1;
+}
+
+.docs-cta {
+    text-align: center;
+    margin-top: 2.5rem;
+}
+
+.docs-cta .btn {
+    font-size: 1.125rem;
+    padding: 0.75rem 2rem;
+}
+
 /* Footer */
 .footer {
     background-color: var(--bg-dark);
@@ -566,5 +635,9 @@ tr:hover {
 
     .hero-buttons {
         flex-direction: column;
+    }
+
+    .docs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
 }

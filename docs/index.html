@@ -43,8 +43,10 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
-                <span>GraphQL AutoGen</span>
+                <a href="index.html">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="nav-logo">
+<!--                    <span>GraphQL AutoGen</span>-->
+                </a>
             </div>
             <div class="nav-menu">
                 <a href="#features" class="nav-link">Fonctionnalités</a>
@@ -52,7 +54,7 @@
                 <a href="#documentation" class="nav-link">Documentation</a>
                 <a href="#examples" class="nav-link">Exemples</a>
                 <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="nav-link" target="_blank">GitHub</a>
-                <a href="#playground" class="nav-cta">Playground</a>
+                <a href="playground.html" class="nav-cta">Playground</a>
             </div>
         </div>
     </nav>
@@ -64,7 +66,7 @@
                 <h1 class="hero-title">Spring Boot GraphQL Auto-Generator</h1>
                 <p class="hero-subtitle">Générez automatiquement vos schémas GraphQL à partir d'entités JPA et contrôleurs Spring Boot avec zéro configuration</p>
                 <div class="hero-buttons">
-                    <a href="#getting-started" class="btn">Démarrer en 2 minutes</a>
+                    <a href="quick-start-guide.html" class="btn">Démarrer en 2 minutes</a>
                     <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="btn btn-secondary" target="_blank">
                         <i class="fab fa-github"></i> GitHub
                     </a>
@@ -99,21 +101,21 @@
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
-                    <h3 class="feature-title">Pagination avancée</h3>
-                    <p class="feature-description">Support de pagination Offset et Relay Cursor avec filtrage et tri dynamiques.</p>
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="feature-title">Intégration Spring Security</h3>
+                    <p class="feature-description">Sécurisez vos API GraphQL avec les annotations standard de Spring Security.</p>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-book"></i></div>
-                    <h3 class="feature-title">Documentation intégrée</h3>
-                    <p class="feature-description">Génération automatique de la documentation GraphQL à partir des JavaDocs et des descriptions d'annotations.</p>
+                    <div class="feature-icon"><i class="fas fa-code"></i></div>
+                    <h3 class="feature-title">Schémas typés</h3>
+                    <p class="feature-description">Génération d'un schéma GraphQL entièrement typé à partir de vos modèles Java existants.</p>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-terminal"></i></div>
-                    <h3 class="feature-title">Outil CLI</h3>
-                    <p class="feature-description">Générez vos schémas GraphQL directement depuis le terminal, sans démarrer l'application.</p>
+                    <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <h3 class="feature-title">Performances optimisées</h3>
+                    <p class="feature-description">Mise en cache intelligente et exécution asynchrone pour des performances maximales.</p>
                 </div>
             </div>
         </div>
@@ -122,118 +124,115 @@
     <!-- Getting Started Section -->
     <section id="getting-started" class="getting-started">
         <div class="container">
-            <h2 class="text-center">Démarrez en 2 minutes</h2>
-            <p class="text-center">Ajoutez la dépendance, annotez vos classes, et c'est tout !</p>
+            <h2 class="text-center">Démarrage en 2 minutes</h2>
+            <p class="text-center">Implémentez rapidement une API GraphQL complète avec ces étapes simples</p>
 
-            <div class="card">
-                <h3>1. Ajouter la dépendance</h3>
-
-                <div class="code-tabs">
-                    <div class="code-tab active" data-tab="maven">Maven</div>
-                    <div class="code-tab" data-tab="gradle">Gradle</div>
-                </div>
-
-                <div class="code-content" id="maven-content">
-                    <pre><code class="language-xml">&lt;dependency&gt;
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Ajoutez la dépendance</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Maven</span>
+                            <button class="copy-button" data-clipboard-target="#maven-dep">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="maven-dep" class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.enokdev&lt;/groupId&gt;
     &lt;artifactId&gt;graphql-autogen-spring-boot-starter&lt;/artifactId&gt;
     &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
+                    </div>
                 </div>
 
-                <div class="code-content" id="gradle-content" style="display: none;">
-                    <pre><code class="language-gradle">implementation 'com.enokdev:graphql-autogen-spring-boot-starter:1.0.0-SNAPSHOT'</code></pre>
-                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Annotez vos entités</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Java</span>
+                            <button class="copy-button" data-clipboard-target="#entity-code">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre><code id="entity-code" class="language-java">import com.enokdev.graphql.autogen.annotation.GraphQLType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
-                <h3>2. Annoter votre entité</h3>
-                <pre><code class="language-java">@Entity
-@GraphQLType(name = "Product")
+@Entity
+@GraphQLType // C'est tout ce dont vous avez besoin !
 public class Product {
-
     @Id
-    @GraphQLId
     private Long id;
     
-    @GraphQLField(description = "Nom du produit")
     private String name;
-
-    @GraphQLField(description = "Prix du produit")
     private Double price;
 
-    // Getters & Setters
+    // Getters et setters
 }</code></pre>
+                    </div>
+                </div>
 
-                <h3>3. Et c'est tout !</h3>
-                <p>Démarrez votre application Spring Boot et accédez à <code>http://localhost:8080/graphiql</code> pour commencer à utiliser votre API GraphQL :</p>
-
-                <pre><code class="language-graphql">query {
-  products {
-    id
-    name
-    price
-  }
-}</code></pre>
-            </div>
-
-            <div class="card">
-                <h3>Utilisation du CLI</h3>
-                <p>Pour générer des schémas GraphQL sans démarrer l'application :</p>
-
-                <pre><code class="language-bash"># Installation
-java -jar graphql-autogen-cli.jar --install
-
-# Génération d'un schéma
-graphql-autogen --scan-package com.example.model --output schema.graphql</code></pre>
-            </div>
-
-            <div class="text-center" style="margin-top: 2rem;">
-                <a href="./quick-start-guide.md" class="btn">Guide de démarrage complet</a>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Exécutez votre application</h3>
+                    <p>C'est tout ! Votre API GraphQL est maintenant accessible à <code>http://localhost:8080/graphql</code></p>
+                    <p>Explorez votre API avec GraphiQL à <code>http://localhost:8080/graphiql</code></p>
+                    <div class="next-step-button">
+                        <a href="quick-start-guide.html" class="btn">Guide de démarrage complet</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Documentation Section -->
-    <section id="documentation" class="documentation">
+    <section id="documentation" class="documentation-section">
         <div class="container">
             <h2 class="text-center">Documentation</h2>
-            <p class="text-center">Tout ce dont vous avez besoin pour maîtriser GraphQL AutoGen</p>
+            <p class="text-center">Des guides complets et détaillés pour vous aider à maîtriser GraphQL AutoGen</p>
 
-            <div class="features-grid">
-                <a href="./quick-start-guide.md" class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-flag"></i></div>
-                    <h3 class="feature-title">Guide de démarrage rapide</h3>
-                    <p class="feature-description">Créez votre première API GraphQL en 5 minutes</p>
+            <div class="docs-grid">
+                <a href="quick-start-guide.html" class="doc-card">
+                    <div class="doc-icon"><i class="fas fa-rocket"></i></div>
+                    <h3 class="doc-title">Guide de démarrage rapide</h3>
+                    <p class="doc-description">Créez votre première API GraphQL en 5 minutes avec Spring Boot GraphQL Auto-Generator</p>
                 </a>
 
-                <a href="./annotations-reference.md" class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-tags"></i></div>
-                    <h3 class="feature-title">Référence des annotations</h3>
-                    <p class="feature-description">La liste complète des annotations disponibles</p>
+                <a href="annotations-reference.html" class="doc-card">
+                    <div class="doc-icon"><i class="fas fa-tag"></i></div>
+                    <h3 class="doc-title">Référence des annotations</h3>
+                    <p class="doc-description">Guide complet de toutes les annotations disponibles dans GraphQL AutoGen</p>
                 </a>
 
-                <a href="./advanced-configuration.md" class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-cogs"></i></div>
-                    <h3 class="feature-title">Configuration avancée</h3>
-                    <p class="feature-description">Options de configuration détaillées</p>
+                <a href="best-practices.html" class="doc-card">
+                    <div class="doc-icon"><i class="fas fa-check-circle"></i></div>
+                    <h3 class="doc-title">Bonnes pratiques</h3>
+                    <p class="doc-description">Conseils et recommandations pour optimiser votre utilisation de GraphQL AutoGen</p>
                 </a>
 
-                <a href="./best-practices.md" class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-crown"></i></div>
-                    <h3 class="feature-title">Bonnes pratiques</h3>
-                    <p class="feature-description">Conseils et astuces pour une utilisation optimale</p>
+                <a href="advanced-configuration.html" class="doc-card">
+                    <div class="doc-icon"><i class="fas fa-sliders-h"></i></div>
+                    <h3 class="doc-title">Configuration avancée</h3>
+                    <p class="doc-description">Options et paramètres avancés pour personnaliser entièrement votre API GraphQL</p>
                 </a>
 
-                <a href="./troubleshooting-type-conflicts.md" class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-bug"></i></div>
-                    <h3 class="feature-title">Dépannage</h3>
-                    <p class="feature-description">Solutions aux problèmes courants</p>
+                <a href="performance-optimization-guide.html" class="doc-card">
+                    <div class="doc-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <h3 class="doc-title">Optimisation des performances</h3>
+                    <p class="doc-description">Guide pour optimiser les performances de vos APIs GraphQL générées</p>
                 </a>
 
-                <a href="./faq.md" class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-question-circle"></i></div>
-                    <h3 class="feature-title">FAQ</h3>
-                    <p class="feature-description">Réponses aux questions fréquentes</p>
+                <a href="troubleshooting-type-conflicts.html" class="doc-card">
+                    <div class="doc-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3 class="doc-title">Résolution des conflits</h3>
+                    <p class="doc-description">Solutions pour résoudre les conflits de types et autres problèmes courants</p>
                 </a>
+            </div>
+
+            <div class="docs-cta">
+                <a href="faq.html" class="btn">Consulter la FAQ</a>
             </div>
         </div>
     </section>
@@ -241,50 +240,63 @@ graphql-autogen --scan-package com.example.model --output schema.graphql</code><
     <!-- Examples Section -->
     <section id="examples" class="examples">
         <div class="container">
-            <h2 class="text-center">Exemples de projets</h2>
-            <p class="text-center">Découvrez des exemples concrets d'utilisation de GraphQL AutoGen</p>
+            <h2 class="text-center">Exemples</h2>
+            <p class="text-center">Des exemples concrets pour vous aider à démarrer rapidement</p>
 
-            <div class="row">
-                <div class="col">
-                    <div class="card">
-                        <h3>📝 Blog Example</h3>
-                        <p>Une application de blog simple avec articles, commentaires et utilisateurs.</p>
-                        <p><strong>Fonctionnalités démontrées:</strong></p>
-                        <ul>
-                            <li>Configuration de base</li>
-                            <li>Relations OneToMany</li>
-                            <li>Pagination</li>
-                        </ul>
-                        <a href="https://github.com/tky0065/spring-boot-graphql-autogen/tree/main/graphql-autogen-examples/blog-example" class="btn" target="_blank">Voir le code</a>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h3 class="example-title">E-commerce</h3>
+                    <p class="example-description">API GraphQL complète pour une application e-commerce avec produits, catégories, commandes et utilisateurs.</p>
+                    <div class="example-tags">
+                        <span class="example-tag">JPA</span>
+                        <span class="example-tag">Spring Security</span>
+                        <span class="example-tag">DataLoader</span>
                     </div>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/tree/main/graphql-autogen-examples/ecommerce-example" class="example-link" target="_blank">
+                        <i class="fab fa-github"></i> Voir le code
+                    </a>
                 </div>
 
-                <div class="col">
-                    <div class="card">
-                        <h3>🛒 E-commerce Example</h3>
-                        <p>Une plateforme e-commerce avec produits, commandes et clients.</p>
-                        <p><strong>Fonctionnalités démontrées:</strong></p>
-                        <ul>
-                            <li>DataLoaders</li>
-                            <li>Relations complexes</li>
-                            <li>Filtrage et tri</li>
-                        </ul>
-                        <a href="https://github.com/tky0065/spring-boot-graphql-autogen/tree/main/graphql-autogen-examples/ecommerce-example" class="btn" target="_blank">Voir le code</a>
+                <div class="example-card">
+                    <h3 class="example-title">Blog</h3>
+                    <p class="example-description">Application de blog avec articles, commentaires et système d'authentification.</p>
+                    <div class="example-tags">
+                        <span class="example-tag">Spring Boot</span>
+                        <span class="example-tag">H2</span>
+                        <span class="example-tag">Mutations</span>
                     </div>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/tree/main/graphql-autogen-examples/blog-example" class="example-link" target="_blank">
+                        <i class="fab fa-github"></i> Voir le code
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Call to Action -->
+    <!-- Playground Section -->
+    <section id="playground" class="playground">
+        <div class="container">
+            <h2 class="text-center">Playground GraphQL</h2>
+            <p class="text-center">Essayez GraphQL AutoGen directement dans votre navigateur</p>
+
+            <div class="playground-preview">
+                <img src="./img/playground-preview.png" alt="GraphQL Playground" class="playground-image">
+                <div class="playground-overlay">
+                    <a href="playground.html" class="btn btn-large">Accéder au Playground</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
     <section class="cta">
         <div class="container">
-            <div class="card">
-                <h2 class="text-center">Prêt à développer plus rapidement ?</h2>
-                <p class="text-center">Ajoutez GraphQL AutoGen à votre projet aujourd'hui et réduisez votre temps de développement</p>
-                <div class="text-center" style="margin-top: 2rem;">
-                    <a href="#getting-started" class="btn">Commencer maintenant</a>
-                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="btn btn-secondary" target="_blank">Star sur GitHub</a>
+            <div class="cta-content">
+                <h2>Prêt à simplifier votre développement GraphQL ?</h2>
+                <p>Commencez dès aujourd'hui avec GraphQL AutoGen et gagnez des heures de développement.</p>
+                <div class="cta-buttons">
+                    <a href="quick-start-guide.html" class="btn">Commencer</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" class="btn btn-outline" target="_blank">Star sur GitHub</a>
                 </div>
             </div>
         </div>
@@ -292,56 +304,28 @@ graphql-autogen --scan-package com.example.model --output schema.graphql</code><
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-column">
-                    <h3>GraphQL AutoGen</h3>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="#features">Fonctionnalités</a></li>
-                        <li class="footer-link"><a href="#getting-started">Démarrage</a></li>
-                        <li class="footer-link"><a href="./quick-start-guide.md">Guide rapide</a></li>
-                        <li class="footer-link"><a href="https://github.com/tky0065/spring-boot-graphql-autogen">GitHub</a></li>
-                    </ul>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="./img/logo.svg" alt="GraphQL AutoGen" class="footer-logo">
+                    <span>GraphQL AutoGen</span>
                 </div>
-
-                <div class="footer-column">
-                    <h3>Documentation</h3>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="./annotations-reference.md">Référence des annotations</a></li>
-                        <li class="footer-link"><a href="./advanced-configuration.md">Configuration avancée</a></li>
-                        <li class="footer-link"><a href="./best-practices.md">Bonnes pratiques</a></li>
-                        <li class="footer-link"><a href="./faq.md">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h3>Ressources</h3>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="https://graphql.org/learn/" target="_blank">GraphQL.org</a></li>
-                        <li class="footer-link"><a href="https://spring.io/projects/spring-graphql" target="_blank">Spring GraphQL</a></li>
-                        <li class="footer-link"><a href="https://www.graphql-java.com/documentation/getting-started" target="_blank">GraphQL Java</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h3>Communauté</h3>
-                    <ul class="footer-links">
-                        <li class="footer-link"><a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un bug</a></li>
-                        <li class="footer-link"><a href="https://github.com/tky0065/spring-boot-graphql-autogen/discussions" target="_blank">Discussions</a></li>
-                        <li class="footer-link"><a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/CONTRIBUTING.md" target="_blank">Contribuer</a></li>
-                    </ul>
+                <div class="footer-links">
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen" target="_blank">GitHub</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/issues" target="_blank">Signaler un problème</a>
+                    <a href="https://github.com/tky0065/spring-boot-graphql-autogen/blob/main/LICENSE" target="_blank">Licence</a>
                 </div>
             </div>
-
-            <div class="footer-bottom">
+            <div class="footer-copyright">
                 <p>&copy; 2025 GraphQL AutoGen. Tous droits réservés.</p>
-                <p>Réalisé avec ❤️ par Enokdev</p>
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
     <script src="./js/app.js"></script>
 </body>
 </html>
