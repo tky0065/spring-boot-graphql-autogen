@@ -1,0 +1,88 @@
+# Configuration GitHub Pages pour Spring Boot GraphQL Auto-Generator
+
+# Informations du site
+title: "Spring Boot GraphQL Auto-Generator"
+description: "Génération automatique de schémas GraphQL pour Spring Boot avec des annotations simples"
+url: "https://tky0065.github.io"
+baseurl: "/spring-boot-graphql-autogen"
+
+# Auteur
+author:
+  name: "EnokDev Team"
+  email: "contact@enokdev.com"
+  twitter: "@enokdev"
+
+# Configuration Jekyll
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Collections
+collections:
+  examples:
+    output: true
+    permalink: /:collection/:name/
+  docs:
+    output: true
+    permalink: /:collection/:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: "_examples"
+      type: "examples"
+    values:
+      layout: "example"
+  - scope:
+      path: "_docs"
+      type: "docs"
+    values:
+      layout: "doc"
+
+# Navigation
+navigation:
+  - title: "Accueil"
+    url: "/"
+  - title: "Documentation"
+    url: "/docs/"
+  - title: "Exemples"
+    url: "/examples/"
+  - title: "GitHub"
+    url: "https://github.com/your-username/spring-boot-graphql-autogen"
+
+# Social
+social:
+  github: "your-username/spring-boot-graphql-autogen"
+  twitter: "enokdev"
+  email: "contact@enokdev.com"
+
+# Versions
+version: "1.0.0"
+spring_boot_version: "3.3.1"
+java_version: "21"
+
+# Exclude from build
+exclude:
+  - "README.md"
+  - "LICENSE"
+  - "Gemfile"
+  - "Gemfile.lock"
+  - "node_modules"
+  - "package.json"
+  - "package-lock.json"
+  - "*.log"
+
+# Include
+include:
+  - "_pages"

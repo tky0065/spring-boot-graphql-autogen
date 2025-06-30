@@ -1,0 +1,8 @@
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/autoconfigure/GraphQLAutoGenProperties.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/autoconfigure/GraphQLSchemaInitializer.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/service/GraphQLSchemaGenerationService.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/starter/GraphQLAutoGenAutoConfiguration.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/starter/GraphQLAutoGenProperties.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/starter/GraphQLSchemaGenerationApplicationListener.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/starter/GraphQLSchemaGenerationService.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-spring-boot-starter/src/main/java/com/enokdev/graphql/autogen/starter/GraphQLSchemaValidatorComplete.java

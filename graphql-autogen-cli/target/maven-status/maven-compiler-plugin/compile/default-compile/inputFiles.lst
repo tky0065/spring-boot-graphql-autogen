@@ -1,0 +1,10 @@
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/autogen/cli/CLILogger.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/CLIConfig.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/CLIConfigLoader.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/CLIExceptionHandler.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/CLIParameterExceptionHandler.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/GenerateCommand.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/GraphQLAutoGenCLI.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/InfoCommand.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/InitCommand.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-cli/src/main/java/com/enokdev/graphql/cli/ValidateCommand.java

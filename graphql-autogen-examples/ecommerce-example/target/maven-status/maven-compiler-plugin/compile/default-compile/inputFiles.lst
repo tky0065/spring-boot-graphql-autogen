@@ -1,0 +1,8 @@
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/EcommerceApplication.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/dto/CreateProductInput.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/model/Category.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/model/Node.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/model/Product.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/model/ProductStatus.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/model/Review.java
+/Users/mac/Documents/dev/spring-boot-graphql-autogen/graphql-autogen-examples/ecommerce-example/src/main/java/com/enokdev/example/ecommerce/model/Searchable.java

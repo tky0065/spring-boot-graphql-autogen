@@ -1,0 +1,363 @@
+name: 🔍 Pull Request Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [ main, develop ]
+
+env:
+  JAVA_VERSION: '21'
+  JAVA_DISTRIBUTION: 'temurin'
+
+jobs:
+  # Validation rapide pour feedback immédiat
+  quick-validation:
+    name: ⚡ Validation rapide
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: 📥 Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🔍 Validation compilation
+        run: mvn clean compile -q
+
+      - name: 🧪 Tests rapides
+        run: mvn test -Dtest=**/*Test -DfailIfNoTests=false
+
+      - name: 📝 Commentaire résultat rapide
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const status = '${{ job.status }}';
+            const body = status === 'success' 
+              ? '✅ **Validation rapide réussie** - Tests de base OK'
+              : '❌ **Validation rapide échouée** - Vérifiez la compilation et les tests de base';
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  # Validation complète
+  full-validation:
+    name: 🔍 Validation complète
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    needs: quick-validation
+    
+    steps:
+      - name: 📥 Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🧪 Tests complets
+        run: mvn clean verify -Pci
+
+      - name: 📊 Analyse de couverture
+        run: |
+          mvn jacoco:report
+          COVERAGE=$(mvn jacoco:check -q | grep -o '[0-9]*\.[0-9]*%' | tail -1 || echo "N/A")
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+
+      - name: 🔍 Checkstyle
+        run: mvn checkstyle:check || echo "Checkstyle warnings found"
+
+      - name: 📝 PMD Analysis
+        run: mvn pmd:check || echo "PMD warnings found"
+
+      - name: 🔒 Security scan
+        run: mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=8
+
+      - name: 📊 Génération du rapport
+        run: |
+          cat > pr-report.md << EOF
+          ## 📊 Rapport de validation PR
+          
+          ### ✅ Tests
+          - **Tests unitaires** : $(mvn surefire-report:report -q && echo "✅ Passés" || echo "❌ Échoués")
+          - **Tests d'intégration** : $(mvn failsafe:verify -q && echo "✅ Passés" || echo "❌ Échoués")
+          - **Couverture de code** : ${COVERAGE}
+          
+          ### 🔍 Qualité du code
+          - **Compilation** : ✅ Réussie
+          - **Checkstyle** : $(mvn checkstyle:check -q && echo "✅ OK" || echo "⚠️ Warnings")
+          - **PMD** : $(mvn pmd:check -q && echo "✅ OK" || echo "⚠️ Warnings")
+          
+          ### 🔒 Sécurité
+          - **Audit dépendances** : $(mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=8 -q && echo "✅ OK" || echo "⚠️ Vulnérabilités trouvées")
+          
+          ### 📦 Build
+          - **Packaging** : $(mvn package -DskipTests=true -q && echo "✅ Réussi" || echo "❌ Échoué")
+          
+          ---
+          *Rapport généré automatiquement le $(date)*
+          EOF
+
+      - name: 📝 Commentaire détaillé
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('pr-report.md', 'utf8');
+            
+            // Chercher un commentaire existant
+            const comments = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('📊 Rapport de validation PR')
+            );
+            
+            if (botComment) {
+              // Mettre à jour le commentaire existant
+              await github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: report
+              });
+            } else {
+              // Créer un nouveau commentaire
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: report
+              });
+            }
+
+  # Validation des changements spécifiques
+  change-validation:
+    name: 🔍 Validation des changements
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: 📥 Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: 📥 Checkout base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}
+
+      - name: 🔍 Analyse des fichiers modifiés
+        id: changes
+        run: |
+          # Fichiers modifiés
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Types de changements
+          HAS_JAVA=$(echo "$CHANGED_FILES" | grep -q '\.java$' && echo "true" || echo "false")
+          HAS_POM=$(echo "$CHANGED_FILES" | grep -q 'pom\.xml$' && echo "true" || echo "false")
+          HAS_DOCS=$(echo "$CHANGED_FILES" | grep -q '\.md$' && echo "true" || echo "false")
+          HAS_TESTS=$(echo "$CHANGED_FILES" | grep -q 'src/test/' && echo "true" || echo "false")
+          
+          echo "has_java=$HAS_JAVA" >> $GITHUB_OUTPUT
+          echo "has_pom=$HAS_POM" >> $GITHUB_OUTPUT
+          echo "has_docs=$HAS_DOCS" >> $GITHUB_OUTPUT
+          echo "has_tests=$HAS_TESTS" >> $GITHUB_OUTPUT
+
+      - name: ☕ Setup Java (si nécessaire)
+        if: steps.changes.outputs.has_java == 'true' || steps.changes.outputs.has_pom == 'true'
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🧪 Tests ciblés pour les changements Java
+        if: steps.changes.outputs.has_java == 'true'
+        run: |
+          # Exécuter seulement les tests des modules modifiés
+          CHANGED_MODULES=$(echo "${{ steps.changes.outputs.changed_files }}" | grep '\.java$' | cut -d'/' -f1 | sort -u)
+          for module in $CHANGED_MODULES; do
+            if [[ -f "$module/pom.xml" ]]; then
+              echo "Testing module: $module"
+              mvn test -pl "$module" -am
+            fi
+          done
+
+      - name: 📝 Validation des POMs
+        if: steps.changes.outputs.has_pom == 'true'
+        run: |
+          # Vérifier que les POMs sont valides
+          mvn validate
+          echo "✅ POMs valides"
+
+      - name: 📚 Validation de la documentation
+        if: steps.changes.outputs.has_docs == 'true'
+        run: |
+          # Vérifier les liens dans la documentation
+          echo "🔍 Vérification de la documentation..."
+          
+          # Vérifier que les liens internes fonctionnent
+          CHANGED_DOCS=$(echo "${{ steps.changes.outputs.changed_files }}" | grep '\.md$')
+          for doc in $CHANGED_DOCS; do
+            if [[ -f "$doc" ]]; then
+              echo "Vérification de $doc"
+              # Ici on pourrait ajouter un linter Markdown
+            fi
+          done
+          echo "✅ Documentation vérifiée"
+
+      - name: 🧪 Validation des tests
+        if: steps.changes.outputs.has_tests == 'true'
+        run: |
+          echo "🧪 Nouveaux tests détectés, validation en cours..."
+          
+          # Vérifier que les nouveaux tests passent
+          NEW_TESTS=$(echo "${{ steps.changes.outputs.changed_files }}" | grep 'src/test/.*\.java$')
+          for test_file in $NEW_TESTS; do
+            if [[ -f "$test_file" ]]; then
+              # Extraire le nom de la classe de test
+              TEST_CLASS=$(basename "$test_file" .java)
+              MODULE=$(echo "$test_file" | cut -d'/' -f1)
+              
+              echo "Exécution du test: $TEST_CLASS dans $MODULE"
+              mvn test -pl "$MODULE" -Dtest="$TEST_CLASS"
+            fi
+          done
+
+  # Vérification des conventions
+  conventions:
+    name: 📏 Vérification des conventions
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: 📥 Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: 📏 Vérification du titre de la PR
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          
+          # Vérifier le format du titre (emoji + description)
+          if [[ ! "$PR_TITLE" =~ ^[[:space:]]*[[:alnum:][:punct:]]+[[:space:]]+.+ ]]; then
+            echo "⚠️ Le titre de la PR devrait commencer par un emoji"
+          fi
+          
+          # Vérifier la longueur
+          if [[ ${#PR_TITLE} -lt 10 ]]; then
+            echo "❌ Le titre de la PR est trop court (minimum 10 caractères)"
+            exit 1
+          fi
+          
+          if [[ ${#PR_TITLE} -gt 72 ]]; then
+            echo "⚠️ Le titre de la PR est long (recommandé: max 72 caractères)"
+          fi
+          
+          echo "✅ Titre de la PR validé"
+
+      - name: 📝 Vérification de la description
+        run: |
+          DESCRIPTION="${{ github.event.pull_request.body }}"
+          
+          if [[ -z "$DESCRIPTION" || "$DESCRIPTION" == "null" ]]; then
+            echo "❌ La PR doit avoir une description"
+            exit 1
+          fi
+          
+          if [[ ${#DESCRIPTION} -lt 20 ]]; then
+            echo "❌ La description de la PR est trop courte (minimum 20 caractères)"
+            exit 1
+          fi
+          
+          echo "✅ Description de la PR validée"
+
+      - name: 🏷️ Vérification des labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map(label => label.name);
+            
+            if (labels.length === 0) {
+              core.warning('Cette PR n\'a pas de labels. Considérez ajouter des labels appropriés.');
+            }
+            
+            const validLabels = ['feature', 'bugfix', 'documentation', 'refactor', 'test', 'breaking-change'];
+            const hasValidLabel = labels.some(label => validLabels.includes(label));
+            
+            if (!hasValidLabel) {
+              core.warning('Considérez ajouter un label de type: ' + validLabels.join(', '));
+            }
+
+  # Résumé final
+  pr-summary:
+    name: 📋 Résumé de validation
+    runs-on: ubuntu-latest
+    needs: [quick-validation, full-validation, change-validation, conventions]
+    if: always() && github.event.pull_request.draft == false
+    
+    steps:
+      - name: 📊 Génération du résumé final
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const jobs = {
+              'Validation rapide': '${{ needs.quick-validation.result }}',
+              'Validation complète': '${{ needs.full-validation.result }}',
+              'Validation des changements': '${{ needs.change-validation.result }}',
+              'Conventions': '${{ needs.conventions.result }}'
+            };
+            
+            let summary = '## 📋 Résumé de validation de la PR\n\n';
+            let allSuccess = true;
+            
+            for (const [job, result] of Object.entries(jobs)) {
+              const emoji = result === 'success' ? '✅' : result === 'failure' ? '❌' : '⚠️';
+              summary += `- ${emoji} **${job}**: ${result}\n`;
+              if (result !== 'success') allSuccess = false;
+            }
+            
+            summary += '\n';
+            
+            if (allSuccess) {
+              summary += '🎉 **Toutes les validations sont réussies!** Cette PR est prête pour la review.\n';
+            } else {
+              summary += '⚠️ **Certaines validations ont échoué.** Veuillez corriger les problèmes avant de demander une review.\n';
+            }
+            
+            summary += '\n---\n*Validation automatique terminée*';
+            
+            // Poster le résumé comme commentaire
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });

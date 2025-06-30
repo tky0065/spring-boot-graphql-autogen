@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GraphQL Auto-Generator Chocolatey Package -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>graphql-autogen</id>
+    <version>1.0.0</version>
+    <packageSourceUrl>https://github.com/your-org/spring-boot-graphql-autogen</packageSourceUrl>
+    <owners>EnokDev</owners>
+    
+    <title>GraphQL Auto-Generator CLI</title>
+    <authors>EnokDev Team</authors>
+    <projectUrl>https://your-domain.github.io/spring-boot-graphql-autogen/</projectUrl>
+    <iconUrl>https://your-domain.github.io/spring-boot-graphql-autogen/assets/logo.png</iconUrl>
+    <copyright>2025 EnokDev</copyright>
+    <licenseUrl>https://github.com/your-org/spring-boot-graphql-autogen/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/your-org/spring-boot-graphql-autogen</projectSourceUrl>
+    <docsUrl>https://your-domain.github.io/spring-boot-graphql-autogen/docs/</docsUrl>
+    <bugTrackerUrl>https://github.com/your-org/spring-boot-graphql-autogen/issues</bugTrackerUrl>
+    
+    <tags>graphql spring-boot java cli code-generation api schema</tags>
+    <summary>CLI tool for automatic GraphQL schema generation from Spring Boot applications</summary>
+    <description><![CDATA[
+**GraphQL Auto-Generator CLI** is a powerful command-line tool that automatically generates GraphQL schemas from your Spring Boot applications using simple annotations.
+
+## Features
+
+- **🚀 Zero Configuration**: Works out of the box with Spring Boot projects
+- **📝 16 Annotations**: Complete set of GraphQL annotations for customization
+- **🔄 Automatic Generation**: Converts JPA entities and REST controllers to GraphQL
+- **⚡ Performance Optimized**: Built-in DataLoaders and pagination support
+- **🛠️ Multiple Commands**: generate, validate, info, and init commands
+- **📊 Project Templates**: Initialize new projects with GraphQL support
+
+## Installation
+
+After installation with Chocolatey, use the CLI:
+
+```bash
+# Generate GraphQL schema from existing code
+graphql-autogen generate --input src/main/java --output src/main/resources/graphql
+
+# Validate existing schema
+graphql-autogen validate --schema schema.graphqls
+
+# Get information about annotated classes
+graphql-autogen info --package com.example.model
+
+# Initialize a new project with GraphQL support
+graphql-autogen init --type maven --name my-graphql-project
+```
+
+## Requirements
+
+- Java 21 or higher
+- Spring Boot 2.7+ or 3.x
+
+## Documentation
+
+- [Quick Start Guide](https://your-domain.github.io/spring-boot-graphql-autogen/docs/quick-start-guide.html)
+- [Annotations Reference](https://your-domain.github.io/spring-boot-graphql-autogen/docs/annotations-reference.html)
+- [CLI Documentation](https://your-domain.github.io/spring-boot-graphql-autogen/docs/cli-guide.html)
+
+## Support
+
+- GitHub Issues: https://github.com/your-org/spring-boot-graphql-autogen/issues
+- Documentation: https://your-domain.github.io/spring-boot-graphql-autogen/
+- Email: support@enokdev.com
+]]></description>
+    
+    <releaseNotes>
+**Version 1.0.0 Release Notes**
+
+🎉 **Initial Release**
+- Complete GraphQL schema auto-generation
+- 16 GraphQL annotations
+- Spring Boot auto-configuration
+- CLI with generate, validate, info, init commands
+- DataLoaders and pagination support
+- Maven and Gradle plugins
+- Comprehensive documentation
+
+For full changelog see: https://github.com/your-org/spring-boot-graphql-autogen/releases/tag/v1.0.0
+    </releaseNotes>
+    
+    <dependencies>
+      <dependency id="openjdk21" version="21.0.0" />
+    </dependencies>
+  </metadata>
+  
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
