@@ -9,12 +9,17 @@
         <groupId>io.github.tky0065</groupId>
         <artifactId>graphql-autogen-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-
     </parent>
 
     <artifactId>ecommerce-example</artifactId>
     <name>E-commerce Example</name>
     <description>E-commerce application example using GraphQL AutoGen</description>
+
+    <!-- Désactiver le déploiement sur Maven Central pour cet exemple -->
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <central.skip>true</central.skip>
+    </properties>
 
     <dependencies>
         <!-- GraphQL AutoGen Starter -->

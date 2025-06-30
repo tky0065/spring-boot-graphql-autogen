@@ -90,6 +90,20 @@ query {
 
 ---
 
+## 🛠️ Utilisation du CLI
+
+Pour générer des schémas GraphQL sans démarrer l'application, vous pouvez utiliser notre outil CLI :
+
+```bash
+# Installation
+java -jar graphql-autogen-cli.jar --install
+
+# Génération d'un schéma
+graphql-autogen --scan-package com.example.model --output schema.graphql
+```
+
+---
+
 ## 🏗️ Exemple complet (5 minutes)
 
 ### Créez un projet Spring Boot

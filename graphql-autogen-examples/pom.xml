@@ -16,6 +16,12 @@
     <name>GraphQL AutoGen Examples</name>
     <description>Example applications demonstrating GraphQL AutoGen usage</description>
 
+    <!-- Désactiver le déploiement sur Maven Central pour tous les exemples -->
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <central.skip>true</central.skip>
+    </properties>
+
     <modules>
         <module>ecommerce-example</module>
     </modules>
