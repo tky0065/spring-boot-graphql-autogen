@@ -1,0 +1,9 @@
+query authors {
+  authors {
+    id
+    firstName
+    lastName
+    email
+    username
+  }
+}

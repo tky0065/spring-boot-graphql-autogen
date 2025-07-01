@@ -1,0 +1,13 @@
+query postBySlug($slug: String!) {
+  postBySlug(slug: $slug) {
+    id
+    title
+    content
+    slug
+    author {
+      id
+      firstName
+      lastName
+    }
+  }
+}

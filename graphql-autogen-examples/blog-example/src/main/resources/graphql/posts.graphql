@@ -1,0 +1,34 @@
+query posts {
+  posts {
+    content {
+      id
+      title
+      slug
+      author {
+        id
+        firstName
+        lastName
+      }
+    }
+    pageable {
+      pageNumber
+      pageSize
+      offset
+      paged
+      unpaged
+    }
+    totalPages
+    totalElements
+    last
+    first
+    size
+    number
+    sort {
+      empty
+      sorted
+      unsorted
+    }
+    numberOfElements
+    empty
+  }
+}
