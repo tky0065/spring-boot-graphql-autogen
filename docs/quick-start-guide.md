@@ -26,13 +26,13 @@
 <dependency>
     <groupId>com.enokdev</groupId>
     <artifactId>graphql-autogen-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 **Gradle :**
 ```gradle
-implementation 'com.enokdev:graphql-autogen-spring-boot-starter:1.0.0-SNAPSHOT'
+implementation 'com.enokdev:graphql-autogen-spring-boot-starter:1.0.0'
 ```
 
 ### 2️⃣ Annotez une entité

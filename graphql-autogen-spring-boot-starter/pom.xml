@@ -8,30 +8,57 @@
     <parent>
         <groupId>io.github.tky0065</groupId>
         <artifactId>spring-boot-graphql-autogen</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>graphql-autogen-spring-boot-starter</artifactId>
     <name>GraphQL AutoGen Spring Boot Starter</name>
     <description>Spring Boot starter for automatic GraphQL schema generation</description>
+    <url>https://github.com/tky0065/spring-boot-graphql-autogen</url>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>GraphQL AutoGen Team</name>
+            <email>enokdev.bf@gmail.com</email>
+            <organization>EnokDev</organization>
+            <organizationUrl>https://enok-dev.vercel.app/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/tky0065/spring-boot-graphql-autogen.git</connection>
+        <developerConnection>scm:git:ssh://github.com:tky0065/spring-boot-graphql-autogen.git</developerConnection>
+        <url>https://github.com/tky0065/spring-boot-graphql-autogen/tree/main</url>
+    </scm>
 
     <dependencies>
         <!-- Core module -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>io.github.tky0065</groupId>
             <artifactId>graphql-autogen-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Spring Boot GraphQL Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-graphql</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
 
         <!-- Spring Boot Web for HTTP transport -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -39,6 +66,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -46,12 +74,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
 
         <!-- Spring Boot Configuration Processor -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -59,12 +89,26 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.graphql</groupId>
             <artifactId>spring-graphql-test</artifactId>
+            <version>${spring-graphql.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--enable-preview</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

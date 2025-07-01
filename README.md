@@ -73,7 +73,7 @@ public class BookController {
 <dependency>
     <groupId>com.example.graphql</groupId>
     <artifactId>graphql-autogen-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -81,7 +81,7 @@ public class BookController {
 
 ```java
 @Entity
-@GraphQLType(description = "Livre de la librairie")
+@GType(description = "Livre de la librairie")
 public class Book {
     @Id
     @GraphQLId
@@ -133,7 +133,7 @@ Accédez à GraphiQL : `http://localhost:8080/graphiql`
 ## 📋 Annotations disponibles
 
 ### Types
-- `@GraphQLType` - Marque une classe comme type GraphQL
+- `@GType` - Marque une classe comme type GraphQL
 - `@GraphQLInput` - Marque une classe comme type Input
 - `@GraphQLEnum` - Marque un enum comme enum GraphQL
 

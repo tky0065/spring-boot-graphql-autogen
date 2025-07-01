@@ -8,7 +8,7 @@
     <parent>
         <groupId>io.github.tky0065</groupId>
         <artifactId>spring-boot-graphql-autogen</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>graphql-autogen-examples</artifactId>
@@ -16,13 +16,18 @@
     <name>GraphQL AutoGen Examples</name>
     <description>Example applications demonstrating GraphQL AutoGen usage</description>
 
-    <!-- Désactiver le déploiement sur Maven Central pour tous les exemples -->
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <central.skip>true</central.skip>
-    </properties>
+
 
     <modules>
         <module>ecommerce-example</module>
     </modules>
+
+    <build>
+        <plugins>
+
+            
+            <!-- Désactiver aussi le plugin de déploiement Maven standard -->
+
+        </plugins>
+    </build>
 </project>
