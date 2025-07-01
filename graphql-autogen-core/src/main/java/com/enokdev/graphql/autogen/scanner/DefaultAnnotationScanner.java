@@ -28,7 +28,6 @@ public class DefaultAnnotationScanner implements AnnotationScanner {
     
     private static final List<Class<? extends Annotation>> GRAPHQL_ANNOTATIONS = List.of(
             GType.class,
-            GraphQLType.class, // @deprecated - kept for backward compatibility
             GraphQLInput.class,
             GraphQLEnum.class,
             GraphQLController.class,

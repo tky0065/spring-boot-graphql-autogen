@@ -179,4 +179,19 @@ public class GraphQLAutoGenAutoConfiguration {
             return new GraphQLSchemaValidator();
         }
     }
+
+    /**
+     * Configuration for DevTools integration.
+     */
+    @Configuration
+    @ConditionalOnClass(name = "org.springframework.boot.devtools.restart.Restarter")
+    static class DevToolsConfiguration {
+
+        @Bean
+        public GraphQLSchemaGenerationDevToolsListener devToolsListener(
+                GraphQLSchemaGenerationService schemaGenerationService) {
+            log.debug("Creating GraphQLSchemaGenerationDevToolsListener bean");
+            return new GraphQLSchemaGenerationDevToolsListener(schemaGenerationService);
+        }
+    }
 }

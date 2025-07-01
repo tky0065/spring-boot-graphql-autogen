@@ -19,7 +19,7 @@ import java.util.HashSet;
  */
 @Entity
 @Table(name = "posts")
-@GraphQLType(name = "Post", description = "Article de blog avec contenu riche et métadonnées")
+@GType(name = "Post", description = "Article de blog avec contenu riche et métadonnées")
 public class Post {
 
     @Id
@@ -86,6 +86,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     @GraphQLField(description = "Auteur de l'article", nullable = false)
+    @GraphQLDataLoader
     private Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)

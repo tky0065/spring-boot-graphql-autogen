@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "categories")
-@GraphQLType(name = "Category", description = "Catégorie d'articles de blog")
+@GType(name = "Category", description = "Catégorie d'articles de blog")
 public class Category {
 
     @Id

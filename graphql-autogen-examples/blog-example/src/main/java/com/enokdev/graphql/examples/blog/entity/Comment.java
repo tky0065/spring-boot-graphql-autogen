@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "comments")
-@GraphQLType(name = "Comment", description = "Commentaire sur un article de blog avec système de réponses")
+@GType(name = "Comment", description = "Commentaire sur un article de blog avec système de réponses")
 public class Comment {
 
     @Id

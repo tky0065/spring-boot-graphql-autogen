@@ -226,27 +226,27 @@
 ## 🛠️ Phase 7: Outils et développement 🟡 EN COURS (60%)
 
 ### Plugin Maven ✅ TERMINÉE
-- [x] Créer le plugin Maven
-- [x] Goal `generate-schema`
-- [x] Configuration du plugin
-- [x] Intégration avec le cycle de vie Maven
-- [x] Support des paramètres de configuration
-- [x] Gestion du classpath projet
-- [x] Validation des paramètres
-- [x] Création automatique du répertoire de sortie
-- [x] Tests du plugin
-- [x] Documentation du plugin
+- [ ] Créer le plugin Maven
+- [ ] Goal `generate-schema`
+- [ ] Configuration du plugin
+- [ ] Intégration avec le cycle de vie Maven
+- [ ] Support des paramètres de configuration
+- [ ] Gestion du classpath projet
+- [ ] Validation des paramètres
+- [ ] Création automatique du répertoire de sortie
+- [ ] Tests du plugin
+- [ ] Documentation du plugin
 
 ### Plugin Gradle ✅ TERMINÉE
-- [x] Créer le plugin Gradle
-- [x] Task `generateGraphQLSchema`
-- [x] Configuration du plugin
-- [x] Intégration avec les tasks Gradle
-- [x] Support des paramètres de configuration
-- [x] Gestion du classpath et scanning
-- [x] Validation des paramètres
-- [x] Gestion des erreurs
-- [x] Tests du plugin
+- [ ] Créer le plugin Gradle
+- [ ] Task `generateGraphQLSchema`
+- [ ] Configuration du plugin
+- [ ] Intégration avec les tasks Gradle
+- [ ] Support des paramètres de configuration
+- [ ] Gestion du classpath et scanning
+- [] Validation des paramètres
+- [ ] Gestion des erreurs
+- [ ] Tests du plugin
 - [ ] Documentation du plugin
 
 ### CLI standalone ✅ TERMINÉE

@@ -20,7 +20,7 @@ class CompilationTest {
     @DisplayName("Should compile all annotations without errors")
     void shouldCompileAllAnnotations() {
         // Verify annotation classes exist and are accessible
-        assertThat(GraphQLType.class).isNotNull();
+        assertThat(GType.class).isNotNull();
         assertThat(GraphQLField.class).isNotNull();
         assertThat(GraphQLId.class).isNotNull();
         assertThat(GraphQLIgnore.class).isNotNull();

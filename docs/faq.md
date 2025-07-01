@@ -1,171 +1,78 @@
-# ❓ FAQ et Troubleshooting
+# ❓ Foire Aux Questions (FAQ)
 
-<div align="center">
-
-**Réponses aux questions fréquentes et solutions aux problèmes courants**
-
-*Résolvez 90% des problèmes en 2 minutes*
-
-</div>
+Cette section répond aux questions fréquemment posées et fournit des solutions aux problèmes courants que vous pourriez rencontrer en utilisant le starter Spring Boot GraphQL Auto-Generator.
 
 ---
 
-## 🚀 Questions générales
+### Q1 : J'ai une erreur `NoUniqueBeanDefinitionException` au démarrage de l'application. Que se passe-t-il ?
 
-### Q: GraphQL AutoGen est-il prêt pour la production ?
+**R :** Cette erreur se produit généralement lorsque vous définissez manuellement un bean qui est également créé par la configuration automatique. Par exemple, si vous avez un bean `GraphQLAutoGenProperties` dans votre configuration de test et que vous activez également `@EnableConfigurationProperties(GraphQLAutoGenProperties.class)`.
 
-**✅ Oui !** GraphQL AutoGen est stable et prêt pour la production :
-
-- ✅ **95% complet** avec toutes les fonctionnalités core
-- ✅ **Tests complets** : >90% de couverture
-- ✅ **Performance validée** : <2s pour schémas moyens
-- ✅ **Exemples fonctionnels** : Applications complètes
-
-### Q: Quelle est la différence avec d'autres solutions ?
-
-| Fonctionnalité | GraphQL AutoGen | Autres solutions |
-|----------------|-----------------|------------------|
-| **Génération auto** | ✅ 100% automatique | ❌ Manuel |
-| **DataLoaders** | ✅ Automatiques | ❌ Manuel |
-| **Pagination** | ✅ Relay auto | ❌ Manuel |
-| **Learning curve** | 🟢 5 min | 🔴 2-3 jours |
+**Solution :** Supprimez la définition manuelle du bean et laissez la configuration automatique le gérer.
 
 ---
 
-## ⚙️ Configuration et setup
+### Q2 : Mon schéma n'est pas généré au démarrage. Comment puis-je déboguer cela ?
 
-### Q: Le schéma ne se génère pas au démarrage
+**R :** Voici quelques points à vérifier :
 
-**🔍 Vérifications :**
-
-1. **Configuration activée :**
-```yaml
-spring:
-  graphql:
-    autogen:
-      enabled: true
-      base-packages: 
-        - "com.example.model"
-```
-
-2. **Classes annotées :**
-```java
-@Entity
-@GraphQLType  // ← Annotation obligatoire
-public class Product { ... }
-```
-
-3. **Logs de debug :**
-```yaml
-logging:
-  level:
-    com.enokdev.graphql.autogen: DEBUG
-```
+1.  **Vérifiez que la dépendance est correctement ajoutée** à votre `pom.xml` ou `build.gradle`.
+2.  **Assurez-vous que la propriété `spring.graphql.autogen.enabled` est à `true`** (c'est la valeur par défaut).
+3.  **Vérifiez que vos paquets de base sont correctement configurés** dans la propriété `spring.graphql.autogen.base-packages`. Si elle est vide, assurez-vous que vos entités et contrôleurs se trouvent dans le même paquet que votre classe d'application principale.
+4.  **Activez le logging de débogage** pour le paquet `com.enokdev.graphql.autogen` pour voir des informations détaillées sur le processus de génération de schéma :
+    ```yaml
+    logging:
+      level:
+        com.enokdev.graphql.autogen: DEBUG
+    ```
 
 ---
 
-## 🏷️ Annotations et génération
+### Q3 : Comment puis-je utiliser un type scalaire personnalisé (par exemple, `UUID`) ?
 
-### Q: Mes champs ne s'affichent pas
+**R :** Vous pouvez mapper des types Java à des scalaires GraphQL personnalisés à l'aide de la propriété `type-mapping`.
 
-**✅ Solution :**
+1.  **Configurez le mappage dans votre `application.yml`** :
+    ```yaml
+    spring:
+      graphql:
+        autogen:
+          type-mapping:
+            java.util.UUID: "UUID"
+    ```
+2.  **Créez un bean `GraphQLScalarType`** pour définir le comportement de votre scalaire personnalisé :
+    ```java
+    @Configuration
+    public class GraphQLConfig {
+
+        @Bean
+        public GraphQLScalarType uuidScalar() {
+            return GraphQLScalarType.newScalar()
+                    .name("UUID")
+                    .description("A custom UUID scalar")
+                    .coercing(new Coercing<UUID, String>() {
+                        // Implémentez ici la logique de conversion
+                    })
+                    .build();
+        }
+    }
+    ```
+
+---
+
+### Q4 : Puis-je exclure certains champs de la génération de schéma ?
+
+**R :** Oui, vous pouvez utiliser l'annotation `@GraphQLIgnore` sur n'importe quel champ ou méthode que vous ne souhaitez pas exposer dans votre schéma GraphQL.
+
 ```java
 @Entity
 @GraphQLType
-public class Product {
-    
-    @GraphQLField  // ← Obligatoire
-    private String name;
-    
-    private String hiddenField;  // ← Ne sera pas exposé
+public class User {
+
+    @GraphQLField
+    private String username;
+
+    @GraphQLIgnore
+    private String password;
 }
 ```
-
-### Q: Comment gérer les champs obligatoires ?
-
-```java
-@GraphQLField(nullable = false)  // → String!
-private String requiredField;
-
-@GraphQLInputField(required = true)  // → String! dans inputs
-private String requiredInput;
-```
-
----
-
-## ⚡ Performance et optimisation
-
-### Q: J'ai des problèmes de N+1 queries
-
-**✅ Solution avec DataLoaders :**
-```java
-@ManyToOne
-@GraphQLField
-@GraphQLDataLoader(batchSize = 100)  // ← Optimisation auto
-private Author author;
-```
-
-**📊 Résultat :**
-- **Avant :** 1 + N requêtes SQL
-- **Après :** 2 requêtes optimisées
-
----
-
-## 🔒 Sécurité
-
-### Q: Comment sécuriser mon API ?
-
-**✅ Avec Spring Security :**
-```java
-@RestController
-@GraphQLController
-@PreAuthorize("hasRole('USER')")  // ← Fonctionne automatiquement
-public class ProductController { ... }
-```
-
-**✅ Champs sensibles :**
-```java
-@GraphQLIgnore(reason = "Données sensibles")
-private String password;
-```
-
----
-
-## 🐛 Problèmes courants
-
-### Q: Erreur "Cannot resolve type X"
-
-**✅ Solutions :**
-1. Ajoutez `@GraphQLType` sur la classe
-2. Vérifiez que le package est dans `base-packages`
-3. Évitez les références circulaires
-
-### Q: DataLoaders ne fonctionnent pas
-
-**✅ Vérifications :**
-```java
-@GraphQLDataLoader(
-    name = "authorDataLoader",
-    keyProperty = "authorId"  // ← Propriété correcte
-)
-private Author author;
-
-@Column(name = "author_id")
-private Long authorId;  // ← Champ correspondant
-```
-
----
-
-## 💡 Conseils rapides
-
-### ⚡ Checklist de résolution
-- [ ] Vérifier `enabled=true` et `base-packages`
-- [ ] Ajouter `@GraphQLType` sur les entités
-- [ ] Utiliser `@GraphQLDataLoader` pour les relations
-- [ ] Consulter les logs avec niveau `DEBUG`
-
----
-
-**🎯 90% des problèmes résolus !**
-
-[Guide complet →](./faq-complete.md)

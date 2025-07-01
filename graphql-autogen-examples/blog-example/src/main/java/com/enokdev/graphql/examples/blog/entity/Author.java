@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "authors")
-@GraphQLType(name = "Author", description = "Auteur de blog avec profil complet")
+@GType(name = "Author", description = "Auteur de blog avec profil complet")
 public class Author {
 
     @Id

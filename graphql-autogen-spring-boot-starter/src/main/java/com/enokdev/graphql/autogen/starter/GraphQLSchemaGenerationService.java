@@ -71,7 +71,7 @@ public class GraphQLSchemaGenerationService {
             
             // Scan for annotated classes
             Set<Class<?>> annotatedClasses = scanForAnnotatedClasses(packagesToScan);
-            log.info("Found {} annotated classes", annotatedClasses.size());
+            log.info("Found {} annotated classes to generate schema from.", annotatedClasses.size());
             
             if (annotatedClasses.isEmpty()) {
                 log.warn("No annotated classes found. Schema generation skipped.");
@@ -94,7 +94,7 @@ public class GraphQLSchemaGenerationService {
                 validateGeneratedSchema(schemaContent);
             }
             
-            log.info("GraphQL schema generation completed successfully");
+            log.info("GraphQL schema generation completed successfully.");
             
         } catch (Exception e) {
             log.error("Failed to generate GraphQL schema", e);

@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -206,6 +209,53 @@ public class GraphQLSchemaValidatorComplete {
         
         if (hasCamelCase && hasSnakeCase) {
             result.addWarning("Mixed naming conventions detected. Consider using consistent camelCase for fields");
+        }
+    }
+
+    private void validateUnusedTypes(String schemaContent, ValidationResult result) {
+        log.debug("Validating for unused types");
+
+        Set<String> definedTypes = new HashSet<>();
+        // Regex to capture type names: type Name { ... }, input Name { ... }, enum Name { ... }, interface Name { ... }, union Name = ...
+        Pattern typeDefinitionPattern = Pattern.compile("^(?:type|input|enum|interface|union)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b.*");
+
+        String[] lines = schemaContent.split("\\n");
+        for (String line : lines) {
+            Matcher matcher = typeDefinitionPattern.matcher(line.trim());
+            if (matcher.matches()) {
+                definedTypes.add(matcher.group(1));
+            }
+        }
+
+        // Exclude standard root types from being flagged as unused if they are only defined
+        definedTypes.remove("Query");
+        definedTypes.remove("Mutation");
+        definedTypes.remove("Subscription");
+
+        for (String typeName : definedTypes) {
+            // Check if the typeName is referenced anywhere else in the schema
+            // This is a very basic check and might have false positives/negatives
+            // A more robust solution would involve parsing the AST
+            boolean isUsed = false;
+            for (String line : lines) {
+                // Avoid matching the type's own definition line
+                if (line.trim().startsWith("type " + typeName) ||
+                    line.trim().startsWith("input " + typeName) ||
+                    line.trim().startsWith("enum " + typeName) ||
+                    line.trim().startsWith("interface " + typeName) ||
+                    line.trim().startsWith("union " + typeName)) {
+                    continue;
+                }
+                // Check if the type name appears in any other line (simple string contains)
+                if (line.contains(typeName)) {
+                    isUsed = true;
+                    break;
+                }
+            }
+
+            if (!isUsed) {
+                result.addWarning("Type '" + typeName + "' is defined but appears to be unused.");
+            }
         }
     }
 

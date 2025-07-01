@@ -2,7 +2,7 @@
   "groups": [
     {
       "name": "spring.graphql.autogen",
-      "type": "com.enokdev.graphql.autogen.autoconfigure.GraphQLAutoGenProperties",
+      "type": "com.enokdev.graphql.autogen.starter.GraphQLAutoGenProperties",
       "description": "Configuration properties for GraphQL AutoGen."
     }
   ],

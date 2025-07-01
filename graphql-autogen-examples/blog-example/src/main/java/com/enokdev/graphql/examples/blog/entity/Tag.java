@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "tags")
-@GraphQLType(name = "Tag", description = "Tag pour organiser et filtrer les articles")
+@GType(name = "Tag", description = "Tag pour organiser et filtrer les articles")
 public class Tag {
 
     @Id
