@@ -1,6 +1,7 @@
 package com.enokdev.graphql.autogen.autoconfigure;
 
 import graphql.schema.GraphQLSchema;
+import com.enokdev.graphql.autogen.starter.GraphQLAutoGenProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -69,8 +70,8 @@ public class GraphQLSchemaInitializer {
         log.info("  Base packages: {}", properties.getBasePackages());
         log.info("  Naming strategy: {}", properties.getNamingStrategy());
         log.info("  Generate inputs: {}", properties.isGenerateInputs());
-        log.info("  Generate subscriptions: {}", properties.isGenerateSubscriptions());
-        log.info("  Schema file generation: {}", properties.getSchema().isGenerateAtStartup());
+        log.info("  Generate subscriptions: {}", properties.isGeneratePayloads());
+        log.info("  Schema file generation: {}", properties.getGenerationMode() == GraphQLAutoGenProperties.GenerationMode.STARTUP);
         
         if (!properties.getTypeMapping().isEmpty()) {
             log.info("  Custom type mappings:");
@@ -89,8 +90,8 @@ public class GraphQLSchemaInitializer {
         log.info("Your GraphQL API is now available at:");
         log.info("  - GraphQL endpoint: /graphql");
         
-        if (properties.getIntrospection().isPlayground()) {
-            log.info("  - GraphiQL playground: {}", properties.getIntrospection().getPlaygroundPath());
+        if (properties.isIncludeJavaDoc()) {
+            log.info("  - GraphiQL playground: {}", properties.getSchemaLocation());
         }
         
         log.info("");

@@ -5,15 +5,22 @@ import com.enokdev.graphql.autogen.generator.GraphQLSchemaValidator;
 import com.enokdev.graphql.autogen.scanner.AnnotationScanner;
 import com.enokdev.graphql.autogen.scanner.DefaultAnnotationScanner;
 import java.util.Map;
+
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Auto-configuration for GraphQL Auto-Generator.
@@ -46,12 +53,45 @@ import org.springframework.context.annotation.Configuration;
     matchIfMissing = true
 )
 @EnableConfigurationProperties(GraphQLAutoGenProperties.class)
-public class GraphQLAutoGenAutoConfiguration {
+public class GraphQLAutoGenAutoConfiguration implements ApplicationContextAware {
 
     private static final Logger log = LoggerFactory.getLogger(GraphQLAutoGenAutoConfiguration.class);
 
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private GraphQLAutoGenProperties properties;
+
     public GraphQLAutoGenAutoConfiguration() {
         log.info("GraphQL Auto-Generator auto-configuration activated");
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Génère automatiquement le schéma GraphQL au démarrage si activé
+     */
+    @PostConstruct
+    public void generateSchemaOnStartup() {
+        // Exécution différée pour éviter les dépendances circulaires
+        if (properties != null && properties.isEnabled() &&
+            properties.getGenerationMode() == GraphQLAutoGenProperties.GenerationMode.STARTUP &&
+            applicationContext != null) {
+
+            // Utilisation du contexte d'application pour obtenir le service après initialisation complète
+            try {
+                GraphQLSchemaGenerationService service = applicationContext.getBean(GraphQLSchemaGenerationService.class);
+                if (service != null) {
+                    log.info("Generating GraphQL schema at startup");
+                    service.generateSchema();
+                }
+            } catch (Exception e) {
+                log.error("Failed to generate GraphQL schema at startup", e);
+            }
+        }
     }
 
     /**
@@ -136,6 +176,7 @@ public class GraphQLAutoGenAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @Lazy  // Utilisation de @Lazy pour briser la dépendance circulaire
     public GraphQLSchemaGenerationService schemaGenerationService(
             SchemaGenerator schemaGenerator,
             AnnotationScanner annotationScanner,
@@ -155,7 +196,7 @@ public class GraphQLAutoGenAutoConfiguration {
         matchIfMissing = true
     )
     public GraphQLSchemaGenerationApplicationListener schemaGenerationListener(
-            GraphQLSchemaGenerationService schemaGenerationService) {
+            @Lazy GraphQLSchemaGenerationService schemaGenerationService) {  // Ajout de @Lazy
         log.debug("Creating GraphQLSchemaGenerationApplicationListener bean");
         return new GraphQLSchemaGenerationApplicationListener(schemaGenerationService);
     }
@@ -189,7 +230,7 @@ public class GraphQLAutoGenAutoConfiguration {
 
         @Bean
         public GraphQLSchemaGenerationDevToolsListener devToolsListener(
-                GraphQLSchemaGenerationService schemaGenerationService) {
+                @Lazy GraphQLSchemaGenerationService schemaGenerationService) {  // Ajout de @Lazy
             log.debug("Creating GraphQLSchemaGenerationDevToolsListener bean");
             return new GraphQLSchemaGenerationDevToolsListener(schemaGenerationService);
         }
