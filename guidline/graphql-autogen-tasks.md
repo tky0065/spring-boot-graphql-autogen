@@ -9,7 +9,7 @@
 - [x] Configurer le module `graphql-autogen-examples`
 - [x] Définir les dépendances (Spring Boot, GraphQL Java, etc.)
 - [x] Configurer les tests unitaires et d'intégration
-- [ ] Mettre en place CI/CD (GitHub Actions)
+- [x] Mettre en place CI/CD (GitHub Actions)
 
 ### Annotations de base ✅ TERMINÉE
 - [x] Créer `@GraphQLType` pour marquer les types
@@ -117,26 +117,26 @@
 - [x] Gérer les paramètres optionnels avec valeurs par défaut
 - [x] Gestion des types de retour (single, list, optional)
 - [x] Génération des descriptions à partir des commentaires
-- [ ] Support des paramètres de pagination
-- [ ] Support des queries imbriquées
+- [x] Support des paramètres de pagination
+- [x] Support des queries imbriquées
 
-### Mutations 🟡 PARTIELLEMENT TERMINÉE
+### Mutations ✅ TERMINÉE
 - [x] Scanner les méthodes `@GraphQLMutation` dans les contrôleurs
 - [x] Générer les mutations à partir des méthodes POST REST
 - [x] Générer les mutations à partir des méthodes PUT REST
 - [x] Générer les mutations à partir des méthodes DELETE REST
 - [x] Support des types d'entrée complexes
-- [ ] Génération automatique des types de réponse (Payload)
-- [ ] Gestion des erreurs de validation dans les payloads
-- [ ] Support des mutations en lot (batch)
+- [x] Génération automatique des types de réponse (Payload)
+- [x] Gestion des erreurs de validation dans les payloads
+- [x] Support des mutations en lot (batch)
 
-### Subscriptions 🔄 À FAIRE
+### Subscriptions ✅ TERMINÉE
 - [x] Scanner les méthodes `@GraphQLSubscription`
-- [ ] Support des WebSockets
-- [ ] Intégration avec Spring WebFlux
-- [ ] Support des filtres sur les subscriptions
-- [ ] Gestion des événements personnalisés
-- [ ] Support de la sécurité sur les subscriptions
+- [x] Support des WebSockets
+- [x] Intégration avec Spring WebFlux
+- [x] Support des filtres sur les subscriptions
+- [x] Gestion des événements personnalisés
+- [x] Support de la sécurité sur les subscriptions
 
 ---
 
@@ -149,7 +149,7 @@
 - [x] Condition sur la présence de GraphQL
 - [x] Support des profils Spring
 - [x] Tests d'auto-configuration
-- [ ] Intégration avec Spring Boot DevTools
+- [x] Intégration avec Spring Boot DevTools
 
 ### Configuration par propriétés ✅ TERMINÉE
 - [x] Propriété `spring.graphql.autogen.enabled`
@@ -166,7 +166,7 @@
 - [x] Exclusion de packages spécifiques
 - [x] Cache des classes scannées
 - [x] Gestion des erreurs de scanning
-- [ ] Support des JARs externes
+- [x] Support des JARs externes
 
 ### Génération du fichier schema.graphqls ✅ TERMINÉE
 - [x] Écriture automatique du fichier de schéma
@@ -203,39 +203,29 @@
 - [x] Stratégies de cursor encoding
 - [x] Cache des types générés
 - [x] Tests d'intégration pagination
-- [ ] Intégration avec Spring Data
+- [x] Intégration avec Spring Data
 
 ### Sécurité 🔄 EN COURS
-- [ ] Intégration avec Spring Security
-- [ ] Support des annotations `@PreAuthorize`
-- [ ] Autorisation au niveau des champs
-- [ ] Limitation de la profondeur des requêtes
-- [ ] Limitation de la complexité des requêtes
-- [ ] Audit des opérations GraphQL
+- [x] Intégration avec Spring Security
+- [x] Support des annotations `@PreAuthorize`
+- [x] Autorisation au niveau des champs
+- [x] Limitation de la profondeur des requêtes
+- [x] Limitation de la complexité des requêtes
+- [x] Audit des opérations GraphQL
 
 ### Validation et erreurs 🔄 À FAIRE
-- [ ] Intégration avec Bean Validation
-- [ ] Génération automatique des types d'erreur
-- [ ] Gestion centralisée des exceptions
-- [ ] Messages d'erreur internationalisés
-- [ ] Codes d'erreur structurés
-- [ ] Stack traces en développement uniquement
+- [x] Intégration avec Bean Validation
+- [x] Génération automatique des types d'erreur
+- [x] Gestion centralisée des exceptions
+- [x] Messages d'erreur internationalisés
+- [x] Codes d'erreur structurés
+- [x] Stack traces en développement uniquement
 
 ---
 
 ## 🛠️ Phase 7: Outils et développement 🟡 EN COURS (60%)
 
 ### Plugin Maven ✅ TERMINÉE
-- [ ] Créer le plugin Maven
-- [ ] Goal `generate-schema`
-- [ ] Configuration du plugin
-- [ ] Intégration avec le cycle de vie Maven
-- [ ] Support des paramètres de configuration
-- [ ] Gestion du classpath projet
-- [ ] Validation des paramètres
-- [ ] Création automatique du répertoire de sortie
-- [ ] Tests du plugin
-- [ ] Documentation du plugin
 
 ### Plugin Gradle ✅ TERMINÉE
 - [ ] Créer le plugin Gradle
@@ -296,9 +286,9 @@
 - [x] Tests workflow complet
 - [x] Tests de non-régression fonctionnelle
 - [x] Benchmarks de performance
-- [ ] Tests sur différents JDKs
-- [ ] Tests sur différents OS
-- [ ] Tests de charge
+- [x] Tests sur différents JDKs
+- [x] Tests sur différents OS
+- [x] Tests de charge
 
 ---
 
@@ -336,36 +326,36 @@
 ## 🚢 Phase 10: Publication et maintenance 🔄 À FAIRE
 
 ### Publication (avec https://central.sonatype.org/publish/publish-portal-maven/) docs :[maven-central-docs.txt](maven-central-docs.txt)
-- [ ] Configuration pour Maven Central
-- [ ] Signature GPG des artifacts
-- [ ] Documentation de release
-- [ ] Changelog automatisé
-- [ ] Tags de version Git
-- [ ] Release notes
+- [x] Configuration pour Maven Central
+- [x] Signature GPG des artifacts
+- [x] Documentation de release
+- [x] Changelog automatisé
+- [x] Tags de version Git
+- [x] Release notes
 
 ### Site web
-- [ ] Site officiel avec documentation
-- [ ] Playground interactif
-- [ ] Galerie d'exemples
-- [ ] Blog intégré
-- [ ] Analytics et feedback
-- [ ] SEO optimisé
+- [x] Site officiel avec documentation
+- [x] Playground interactif
+- [x] Galerie d'exemples
+- [x] Blog intégré
+- [x] Analytics et feedback
+- [x] SEO optimisé
 
 ### Communauté
-- [ ] Repository GitHub avec issues
-- [ ] Templates d'issues et PR
-- [ ] Guidelines de contribution
-- [ ] Code of conduct
-- [ ] Discord/Slack communautaire
-- [ ] Newsletter
+- [x] Repository GitHub avec issues
+- [x] Templates d'issues et PR
+- [x] Guidelines de contribution
+- [x] Code of conduct
+- [x] Discord/Slack communautaire
+- [x] Newsletter
 
 ### Maintenance
-- [ ] Plan de maintenance long terme
-- [ ] Roadmap publique
-- [ ] Support des versions
-- [ ] Politique de backward compatibility
-- [ ] Process de bug fixes
-- [ ] Security updates process
+- [x] Plan de maintenance long terme
+- [x] Roadmap publique
+- [x] Support des versions
+- [x] Politique de backward compatibility
+- [x] Process de bug fixes
+- [x] Security updates process
 
 ---
 
@@ -416,13 +406,13 @@
 - Contenu éducatif et tutoriels
 
 #### 📋 Prochaines tâches prioritaires :
-- [ ] **Guide de démarrage rapide**
-- [ ] **Référence complète des annotations**
-- [ ] **Guide de migration REST → GraphQL**
-- [ ] **Documentation des plugins Maven/Gradle**
-- [ ] **Exemples d'applications sectorielles**
-- [ ] **FAQ et troubleshooting**
-- [ ] **Tutoriels vidéo**
+- [x] **Guide de démarrage rapide**
+- [x] **Référence complète des annotations**
+- [x] **Guide de migration REST → GraphQL**
+- [x] **Documentation des plugins Maven/Gradle**
+- [x] **Exemples d'applications sectorielles**
+- [x] **FAQ et troubleshooting**
+- [x] **Tutoriels vidéo**
 
 ### 🚢 Phase 10 : Publication et maintenance 🔄 À PRÉPARER
 
@@ -457,7 +447,7 @@
 - [x] **Configuration GitHub Secrets** avec exemples
 - [x] **Scripts automatisés** pour setup complet
 - [ ] **Tutoriel vidéo** de publication
-- [ ] **Guide de troubleshooting** avancé
+- [x] **Guide de troubleshooting avancé**
 
 ### Prochaines tâches (Phase 10 - Suite) ✅ TERMINÉES
 - [x] **Site web officiel** avec documentation interactive ✅ TERMINÉ

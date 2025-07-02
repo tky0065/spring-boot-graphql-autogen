@@ -41,6 +41,7 @@
         <module>graphql-autogen-spring-boot-starter</module>
         <module>graphql-autogen-cli</module>
         <module>graphql-autogen-examples</module>
+        <module>graphql-autogen-maven-plugin</module>
     </modules>
 
     <dependencyManagement>

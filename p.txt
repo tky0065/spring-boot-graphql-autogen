@@ -4,7 +4,7 @@ graphql-autogen-tasks.md
 oui oui et mettre a jour au fuire a messure les task (marquer valider si terminer)
 
 
-continue le projet dans intelj en bassans sur le fichier PROGRESS.md et les fichiers du dossier guidline une fois une tasks terminer tu doit le marquer terminer dans le fichier guidline/graphql-autogen-tasks.md
+continue le projet en te bassans sur  les fichiers du dossier guidline une fois une tasks terminer tu doit le marquer terminer dans le fichier guidline/graphql-autogen-tasks.md
 
 
 GraphQLType → GType

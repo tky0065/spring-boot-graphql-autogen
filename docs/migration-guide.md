@@ -74,23 +74,60 @@ public class Product {
 **Après (avec GraphQL) :**
 ```java
 @Entity
-@GraphQLType(name = "Product", description = "Produit e-commerce")  // ← Ajouté
+@GraphQLType(name = "Product", description = "Produit e-commerce")
 public class Product {
     
     @Id
-    @GraphQLId  // ← Ajouté
+    @GraphQLId
     private Long id;
     
-    @GraphQLField(description = "Nom du produit")  // ← Ajouté
+    @GraphQLField(description = "Nom du produit")
     private String name;
     
-    @GraphQLField(description = "Prix en euros")  // ← Ajouté
+    @GraphQLField(description = "Prix en euros")
     private BigDecimal price;
     
     @ManyToOne
-    @GraphQLField(description = "Catégorie")  // ← Ajouté
-    @GraphQLDataLoader(batchSize = 100)  // ← Optimisation auto
+    @GraphQLField(description = "Catégorie")
+    @GraphQLDataLoader(batchSize = 100) // Optimisation N+1
     private Category category;
+    
+    @OneToMany(mappedBy = "product")
+    @GraphQLField(description = "Avis des clients")
+    @GraphQLPagination(type = GraphQLPagination.PaginationType.OFFSET_BASED, pageSize = 10) // Pagination auto
+    private List<Review> reviews;
+}
+
+@Entity
+@GraphQLType(name = "Category", description = "Catégorie de produits")
+public class Category {
+    @Id
+    @GraphQLId
+    private Long id;
+    
+    @GraphQLField(description = "Nom de la catégorie")
+    private String name;
+    
+    @OneToMany(mappedBy = "category")
+    @GraphQLField(description = "Produits de cette catégorie")
+    private List<Product> products;
+}
+
+@Entity
+@GraphQLType(name = "Review", description = "Avis client")
+public class Review {
+    @Id
+    @GraphQLId
+    private Long id;
+    
+    @GraphQLField(description = "Commentaire de l'avis")
+    private String comment;
+    
+    @GraphQLField(description = "Note (1-5)")
+    private Integer rating;
+    
+    @ManyToOne
+    private Product product;
 }
 ```
 
@@ -98,26 +135,169 @@ public class Product {
 
 ---
 
-## 📊 Résultats de migration
+## Étape 4 : Annotation des Contrôleurs REST existants
 
-### Performance améliorée
+Vous pouvez transformer vos contrôleurs REST existants en contrôleurs GraphQL en ajoutant simplement quelques annotations. Vos endpoints REST continueront de fonctionner normalement.
 
-| Métrique | REST | GraphQL | Amélioration |
-|----------|------|---------|--------------|
-| Requêtes HTTP | 10+ | 1 | **90% moins** |
-| Requêtes SQL N+1 | Fréquent | Éliminé | **100% optimisé** |
-| Temps développement | 100% | 10% | **90% plus rapide** |
+**Avant (Contrôleur REST) :**
+```java
+@RestController
+@RequestMapping("/api/products")
+public class ProductRestController {
 
-### Fonctionnalités ajoutées gratuitement
+    @Autowired
+    private ProductService productService;
 
-- ✅ **DataLoaders automatiques** : Fini les N+1 queries
-- ✅ **Pagination Relay** : Standards GraphQL
-- ✅ **Documentation auto** : Depuis JavaDoc
-- ✅ **Validation intégrée** : Bean Validation + GraphQL
-- ✅ **Optimisations** : Cache et performance
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productService.findById(id);
+    }
+
+    @GetMapping
+    public List<Product> getAllProducts() {
+        return productService.findAll();
+    }
+
+    @PostMapping
+    public Product createProduct(@RequestBody Product product) {
+        return productService.save(product);
+    }
+}
+```
+
+**Après (avec GraphQL) :**
+```java
+@RestController
+@RequestMapping("/api/products")
+@GraphQLController // ← Ajouté
+public class ProductRestController {
+
+    @Autowired
+    private ProductService productService;
+
+    @GetMapping("/{id}")
+    @GraphQLQuery(name = "productById", description = "Récupère un produit par son ID") // ← Ajouté
+    public Product getProductById(@GraphQLArgument(name = "id") @PathVariable Long id) {
+        return productService.findById(id);
+    }
+
+    @GetMapping
+    @GraphQLQuery(name = "allProducts", description = "Récupère tous les produits") // ← Ajouté
+    public List<Product> getAllProducts() {
+        return productService.findAll();
+    }
+
+    @PostMapping
+    @GraphQLMutation(name = "createProduct", description = "Crée un nouveau produit") // ← Ajouté
+    public Product createProduct(@GraphQLArgument(name = "productInput") @RequestBody Product product) {
+        return productService.save(product);
+    }
+}
+```
+
+🔑 **Points clés :** Vos méthodes REST sont maintenant aussi des opérations GraphQL, sans duplication de code !
 
 ---
 
-**🎉 Votre API REST devient GraphQL en gardant 100% compatibilité !**
+## ▶️ Étape 5 : Démarrer l'Application
 
-[Guide complet →](./migration-guide-complete.md)
+Démarrez votre application Spring Boot. Le schéma GraphQL sera généré automatiquement au démarrage.
+
+---
+
+## 🧪 Étape 6 : Tester Votre API GraphQL
+
+Ouvrez votre navigateur et accédez à `http://localhost:8080/graphiql` (ou `/graphql` si vous utilisez un client GraphQL comme Postman ou Insomnia).
+
+### Tester une Query (récupérer un produit par ID)
+
+```graphql
+query GetProductById($id: ID!) {
+  productById(id: $id) {
+    id
+    name
+    price
+    category {
+      id
+      name
+    }
+    reviews {
+      comment
+      rating
+    }
+  }
+}
+```
+
+**Variables de requête :**
+```json
+{
+  "id": "1"
+}
+```
+
+### Tester une Mutation (créer un produit)
+
+```graphql
+mutation CreateNewProduct($productInput: ProductInput!) {
+  createProduct(productInput: $productInput) {
+    id
+    name
+    price
+  }
+}
+```
+
+**Variables de requête :**
+```json
+{
+  "productInput": {
+    "name": "Nouveau Produit",
+    "price": 29.99,
+    "categoryId": "1" 
+  }
+}
+```
+
+---
+
+## Étape 7 : Utilisation des Inputs
+
+Lorsque vous définissez des mutations, GraphQL AutoGen génère automatiquement des types `Input` basés sur vos DTOs ou entités. Par exemple, pour la mutation `createProduct`, un `ProductInput` est généré.
+
+**Exemple de DTO pour un Input :**
+```java
+@GraphQLInput(name = "ProductInput")
+public class ProductInputDto {
+    private String name;
+    private BigDecimal price;
+    private Long categoryId; // Pour lier à une catégorie existante
+    // Getters et Setters
+}
+```
+
+Vous pouvez utiliser cet `ProductInputDto` dans votre contrôleur :
+
+```java
+@GraphQLMutation(name = "createProduct")
+public Product createProduct(@GraphQLArgument(name = "productInput") ProductInputDto productInput) {
+    // Convertir productInputDto en entité Product et sauvegarder
+    return productService.save(productInput);
+}
+```
+
+---
+
+🎉 **Félicitations !** Vous avez migré avec succès votre API REST vers GraphQL, en conservant votre logique métier existante et en bénéficiant des avantages de GraphQL.
+
+---
+
+## 🚀 Prochaines Étapes
+
+Maintenant que vous avez les bases, vous pouvez explorer des fonctionnalités plus avancées :
+
+-   [Créer des Mutations pour modifier des données](./mutations-guide.md)
+-   [Utiliser des DataLoaders pour optimiser les performances](./dataloaders-guide.md)
+-   [Configurer la pagination pour les listes](./pagination-guide.md)
+
+

@@ -38,4 +38,16 @@ public @interface GraphQLQuery {
      * Custom deprecation reason if this query is deprecated.
      */
     String deprecationReason() default "";
+
+    /**
+     * Specifies the roles required to access this query.
+     * If not specified, no role-based access control will be applied.
+     */
+    String[] roles() default {};
+
+    /**
+     * Specifies the permissions required to access this query.
+     * If not specified, no permission-based access control will be applied.
+     */
+    String[] permissions() default {};
 }

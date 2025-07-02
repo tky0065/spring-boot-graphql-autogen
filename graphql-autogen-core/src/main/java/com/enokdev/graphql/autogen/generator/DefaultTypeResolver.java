@@ -49,30 +49,56 @@ public class DefaultTypeResolver implements TypeResolver {
         registerTypeMapping(LocalDateTime.class, "DateTime");
         registerTypeMapping(LocalDate.class, "Date");
         registerTypeMapping(LocalTime.class, "Time");
-        registerTypeMapping(UUID.class, "ID");
-    }
-    
-    public DefaultTypeResolver(com.enokdev.graphql.autogen.config.GraphQLAutoGenConfig config) {
-        this(); // Call default constructor for basic setup
-        // Additional configuration can be applied here if needed
     }
 
     @Override
     public graphql.schema.GraphQLType resolveType(Class<?> javaType) {
-        if (javaType == null) {
-            throw new TypeResolutionException("Java type cannot be null", null);
+        // Check cache first
+        if (typeCache.containsKey(javaType)) {
+            return typeCache.get(javaType);
         }
 
-        graphql.schema.GraphQLType cachedType = typeCache.get(javaType);
-        if (cachedType != null) {
-            return cachedType;
+        GraphQLType resolvedType;
+
+        // Check if it's a scalar type
+        if (SCALAR_MAPPINGS.containsKey(javaType)) {
+            return SCALAR_MAPPINGS.get(javaType);
         }
 
-        graphql.schema.GraphQLType resolvedType = doResolveType(javaType);
-        if (resolvedType != null) {
-            typeCache.put(javaType, resolvedType);
+        // Check if it's an enum
+        if (isEnumType(javaType)) {
+            resolvedType = createEnumType(javaType);
+        }
+        // Check if it's an interface
+        else if (isInterfaceType(javaType)) {
+            resolvedType = createInterfaceType(javaType);
+        }
+        // Check if it's a union
+        else if (isUnionType(javaType)) {
+            resolvedType = createUnionType(javaType);
+        }
+        // Check if it's an input type
+        else if (isInputType(javaType)) {
+            resolvedType = createInputObjectType(javaType);
+        }
+        // Default to object type
+        else if (isObjectType(javaType)) {
+            resolvedType = createObjectType(javaType);
+        }
+        // Special handling for collections
+        else if (Collection.class.isAssignableFrom(javaType)) {
+            resolvedType = GraphQLList.list(Scalars.GraphQLString); // Default list of strings
+        }
+        // Special handling for maps
+        else if (Map.class.isAssignableFrom(javaType)) {
+            resolvedType = Scalars.GraphQLString; // Maps default to JSON strings
+        }
+        else {
+            throw new TypeResolutionException("Cannot resolve Java type to GraphQL type: " + javaType.getName());
         }
 
+        // Cache the resolved type
+        typeCache.put(javaType, resolvedType);
         return resolvedType;
     }
     
@@ -80,40 +106,87 @@ public class DefaultTypeResolver implements TypeResolver {
     public graphql.schema.GraphQLType resolveType(Type javaType) {
         if (javaType instanceof Class<?>) {
             return resolveType((Class<?>) javaType);
+        } else if (javaType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) javaType;
+            Type rawType = parameterizedType.getRawType();
+
+            if (rawType instanceof Class<?>) {
+                Class<?> rawClass = (Class<?>) rawType;
+
+                // Handle collections
+                if (Collection.class.isAssignableFrom(rawClass)) {
+                    Type itemType = parameterizedType.getActualTypeArguments()[0];
+                    if (itemType instanceof Class<?>) {
+                        return GraphQLList.list(resolveOutputType((Class<?>) itemType));
+                    }
+                }
+
+                // Handle maps (convert to JSON string)
+                if (Map.class.isAssignableFrom(rawClass)) {
+                    return Scalars.GraphQLString;
+                }
+
+                // Handle optionals
+                if (Optional.class.isAssignableFrom(rawClass)) {
+                    Type innerType = parameterizedType.getActualTypeArguments()[0];
+                    if (innerType instanceof Class<?>) {
+                        return resolveType((Class<?>) innerType);
+                    }
+                }
+            }
+
+            throw new TypeResolutionException("Cannot resolve parameterized type: " + javaType);
         }
         
-        if (javaType instanceof ParameterizedType parameterizedType) {
-            return resolveParameterizedType(parameterizedType);
-        }
-        
-        throw new TypeResolutionException("Unsupported Java type: " + javaType, javaType.getClass());
+        throw new TypeResolutionException("Unsupported Java type: " + javaType);
     }
     
     @Override
     public boolean canResolve(Class<?> javaType) {
-        if (javaType == null) {
-            return false;
+        // Check if it's in cache
+        if (typeCache.containsKey(javaType)) {
+            return true;
         }
-        
-        try {
-            return doResolveType(javaType) != null;
-        } catch (Exception e) {
-            return false;
+
+        // Check if it's a scalar type
+        if (SCALAR_MAPPINGS.containsKey(javaType)) {
+            return true;
         }
+
+        // Check if it's an annotated type
+        if (isObjectType(javaType) || isInputType(javaType) || isEnumType(javaType) ||
+            isInterfaceType(javaType) || isUnionType(javaType)) {
+            return true;
+        }
+
+        // Check for collection types
+        if (Collection.class.isAssignableFrom(javaType)) {
+            return true;
+        }
+
+        // Check for map types
+        if (Map.class.isAssignableFrom(javaType)) {
+            return true;
+        }
+
+        return false;
     }
     
     @Override
     public boolean canResolve(Type javaType) {
         if (javaType instanceof Class<?>) {
             return canResolve((Class<?>) javaType);
-        }
-        
-        if (javaType instanceof ParameterizedType) {
-            try {
-                resolveParameterizedType((ParameterizedType) javaType);
-                return true;
-            } catch (Exception e) {
-                return false;
+        } else if (javaType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) javaType;
+            Type rawType = parameterizedType.getRawType();
+
+            if (rawType instanceof Class<?>) {
+                Class<?> rawClass = (Class<?>) rawType;
+
+                // Handle collections, maps, optionals
+                return Collection.class.isAssignableFrom(rawClass) ||
+                       Map.class.isAssignableFrom(rawClass) ||
+                       Optional.class.isAssignableFrom(rawClass);
             }
         }
         
@@ -121,182 +194,133 @@ public class DefaultTypeResolver implements TypeResolver {
     }
     
     @Override
-    public void registerTypeMapping(Class<?> javaType, String graphqlTypeName) {
-        customTypeMappings.put(javaType, graphqlTypeName);
+    public void registerTypeMapping(Class<?> javaType, String graphQLTypeName) {
+        log.debug("Registering type mapping: {} -> {}", javaType.getName(), graphQLTypeName);
+        customTypeMappings.put(javaType, graphQLTypeName);
     }
-    
-    private graphql.schema.GraphQLType doResolveType(Class<?> javaType) {
-        // Handle built-in scalar types
-        GraphQLScalarType scalarType = SCALAR_MAPPINGS.get(javaType);
-        if (scalarType != null) {
-            return scalarType;
+
+    @Override
+    public String getGraphQLTypeName(Class<?> javaType) {
+        // Check custom mappings first
+        if (customTypeMappings.containsKey(javaType)) {
+            return customTypeMappings.get(javaType);
         }
         
-        // Handle custom scalar mappings
-        String customTypeName = customTypeMappings.get(javaType);
-        if (customTypeName != null) {
-            return createCustomScalar(customTypeName, javaType);
-        }
-        
-        // Handle @GraphQLId annotation
-        if (hasGraphQLIdAnnotation(javaType)) {
-            return Scalars.GraphQLID;
-        }
-        
-        // Handle arrays
-        if (javaType.isArray()) {
-            Class<?> componentType = javaType.getComponentType();
-            graphql.schema.GraphQLType elementType = resolveType(componentType);
-            return GraphQLList.list(elementType);
-        }
-        
-        // Handle Enums with @GraphQLEnum
-        if (javaType.isEnum() && javaType.isAnnotationPresent(GraphQLEnum.class)) {
-            return createGraphQLEnum(javaType);
-        }
-        
-        // Handle Collections (List, Set, etc.)
-        if (Collection.class.isAssignableFrom(javaType)) {
-            return GraphQLList.list(Scalars.GraphQLString);
-        }
-        
-        // Handle Optional
-        if (Optional.class.isAssignableFrom(javaType)) {
-            return Scalars.GraphQLString;
-        }
-        
-        // Handle @GraphQLInterface annotated classes/interfaces
-        if (javaType.isAnnotationPresent(GraphQLInterface.class)) {
-            return createGraphQLInterfaceType(javaType);
-        }
-        
-        // Handle @GraphQLUnion annotated classes
-        if (javaType.isAnnotationPresent(GraphQLUnion.class)) {
-            return createGraphQLUnionType(javaType);
-        }
-        
-        // Handle @AutoGenType annotated classes
+        // Check for class-level annotations
         if (javaType.isAnnotationPresent(GType.class)) {
-            return createGraphQLObjectType(javaType);
-        }
-        
-        // Handle @GraphQLInput annotated classes
-        if (javaType.isAnnotationPresent(GraphQLInput.class)) {
-            return createGraphQLInputType(javaType);
-        }
-        
-        throw new TypeResolutionException(STR."Cannot resolve Java type to GraphQL type: \{javaType.getName()}", javaType);
-    }
-    
-    private graphql.schema.GraphQLType resolveParameterizedType(ParameterizedType parameterizedType) {
-        Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-        Type[] typeArguments = parameterizedType.getActualTypeArguments();
-        
-        if (Collection.class.isAssignableFrom(rawType) && typeArguments.length > 0) {
-            graphql.schema.GraphQLType elementType = resolveType(typeArguments[0]);
-            return GraphQLList.list(elementType);
-        }
-        
-        if (Optional.class.isAssignableFrom(rawType) && typeArguments.length > 0) {
-            return resolveType(typeArguments[0]);
-        }
-        
-        return resolveType(rawType);
-    }
-    
-    private GraphQLScalarType createCustomScalar(String typeName, Class<?> javaType) {
-        return GraphQLScalarType.newScalar()
-            .name(typeName)
-            .description("Custom scalar type for " + javaType.getSimpleName())
-            .coercing(new CustomScalarCoercing(javaType))
-            .build();
-    }
-    
-    private GraphQLEnumType createGraphQLEnum(Class<?> enumClass) {
-        GraphQLEnum annotation = enumClass.getAnnotation(GraphQLEnum.class);
-        String enumName = annotation.name().isEmpty() ? enumClass.getSimpleName() : annotation.name();
-        
-        return GraphQLEnumType.newEnum()
-            .name(enumName)
-            .description(annotation.description())
-            .build();
-    }
-    
-    private GraphQLInterfaceType createGraphQLInterfaceType(Class<?> javaInterface) {
-        GraphQLInterface annotation = javaInterface.getAnnotation(GraphQLInterface.class);
-        String interfaceName = annotation.name().isEmpty() ? javaInterface.getSimpleName() : annotation.name();
-        
-        return GraphQLInterfaceType.newInterface()
-            .name(interfaceName)
-            .description(annotation.description())
-            .build();
-    }
-    
-    private GraphQLUnionType createGraphQLUnionType(Class<?> javaClass) {
-        GraphQLUnion annotation = javaClass.getAnnotation(GraphQLUnion.class);
-        String unionName = annotation.name().isEmpty() ? javaClass.getSimpleName() : annotation.name();
-        
-        GraphQLUnionType.Builder unionBuilder = GraphQLUnionType.newUnionType()
-            .name(unionName)
-            .description(annotation.description());
-        
-        for (Class<?> type : annotation.types()) {
-            if (type.isAnnotationPresent(GType.class)) {
-                graphql.schema.GraphQLObjectType objectType = (graphql.schema.GraphQLObjectType) resolveType(type);
-                unionBuilder.possibleType(objectType);
+            GType annotation = javaType.getAnnotation(GType.class);
+            String name = annotation.value();
+            if (!name.isEmpty()) {
+                return name;
             }
         }
         
-        return unionBuilder.build();
+        if (javaType.isAnnotationPresent(GraphQLInterface.class)) {
+            GraphQLInterface annotation = javaType.getAnnotation(GraphQLInterface.class);
+            String name = annotation.value();
+            if (!name.isEmpty()) {
+                return name;
+            }
+        }
+        
+        if (javaType.isAnnotationPresent(GraphQLUnion.class)) {
+            GraphQLUnion annotation = javaType.getAnnotation(GraphQLUnion.class);
+            String name = annotation.value();
+            if (!name.isEmpty()) {
+                return name;
+            }
+        }
+
+        if (javaType.isAnnotationPresent(GraphQLEnum.class)) {
+            GraphQLEnum annotation = javaType.getAnnotation(GraphQLEnum.class);
+            String name = annotation.value();
+            if (!name.isEmpty()) {
+                return name;
+            }
+        }
+        
+        // Default to class simple name
+        return javaType.getSimpleName();
+    }
+
+    @Override
+    public String getGraphQLInputTypeName(Class<?> javaType) {
+        // Check for input type annotation
+        if (javaType.isAnnotationPresent(GraphQLInput.class)) {
+            GraphQLInput annotation = javaType.getAnnotation(GraphQLInput.class);
+            String name = annotation.value();
+            if (!name.isEmpty()) {
+                return name;
+            }
+            return javaType.getSimpleName();
+        }
+
+        // For object types that need input types, append "Input"
+        return getGraphQLTypeName(javaType) + "Input";
+    }
+
+    @Override
+    public GraphQLOutputType resolveOutputType(Class<?> javaType) {
+        GraphQLType type = resolveType(javaType);
+        if (type instanceof GraphQLOutputType) {
+            return (GraphQLOutputType) type;
+        }
+        throw new TypeResolutionException("Type " + javaType.getName() + " cannot be used as an output type");
+    }
+
+    @Override
+    public GraphQLInputType resolveInputType(Class<?> javaType) {
+        GraphQLType type = resolveType(javaType);
+        if (type instanceof GraphQLInputType) {
+            return (GraphQLInputType) type;
+        }
+        throw new TypeResolutionException("Type " + javaType.getName() + " cannot be used as an input type");
     }
     
-    private graphql.schema.GraphQLObjectType createGraphQLObjectType(Class<?> javaClass) {
-        GType annotation = javaClass.getAnnotation(GType.class);
-        String typeName = annotation.name().isEmpty() ? javaClass.getSimpleName() : annotation.name();
-        
-        return graphql.schema.GraphQLObjectType.newObject()
+    // Helper methods for creating different GraphQL types
+
+    private GraphQLEnumType createEnumType(Class<?> javaEnum) {
+        String typeName = getGraphQLTypeName(javaEnum);
+        GraphQLEnumType.Builder builder = GraphQLEnumType.newEnum().name(typeName);
+
+        // Add enum values
+        for (Object enumConstant : javaEnum.getEnumConstants()) {
+            String enumName = ((Enum<?>) enumConstant).name();
+            builder.value(enumName);
+        }
+
+        return builder.build();
+    }
+
+    private GraphQLInterfaceType createInterfaceType(Class<?> javaInterface) {
+        String typeName = getGraphQLTypeName(javaInterface);
+        return GraphQLInterfaceType.newInterface()
             .name(typeName)
-            .description(annotation.description())
+            .description("Interface generated from " + javaInterface.getName())
             .build();
     }
     
-    private GraphQLInputObjectType createGraphQLInputType(Class<?> javaClass) {
-        GraphQLInput annotation = javaClass.getAnnotation(GraphQLInput.class);
-        String typeName = annotation.name().isEmpty() ? STR."\{javaClass.getSimpleName()}Input" : annotation.name();
-        
+    private GraphQLUnionType createUnionType(Class<?> javaUnion) {
+        String typeName = getGraphQLTypeName(javaUnion);
+        return GraphQLUnionType.newUnionType()
+            .name(typeName)
+            .description("Union type generated from " + javaUnion.getName())
+            .build();
+    }
+    
+    private GraphQLInputObjectType createInputObjectType(Class<?> javaClass) {
+        String typeName = getGraphQLInputTypeName(javaClass);
         return GraphQLInputObjectType.newInputObject()
             .name(typeName)
-            .description(annotation.description())
+            .description("Input type generated from " + javaClass.getName())
             .build();
     }
-    
-    private boolean hasGraphQLIdAnnotation(Class<?> javaType) {
-        return Arrays.stream(javaType.getDeclaredFields())
-            .anyMatch(field -> field.isAnnotationPresent(GraphQLId.class));
-    }
-    
-    private static class CustomScalarCoercing implements Coercing<Object, Object> {
-        private final Class<?> javaType;
-        
-        public CustomScalarCoercing(Class<?> javaType) {
-            this.javaType = javaType;
-        }
-        
-        @Override
-        public Object serialize(Object dataFetcherResult) {
-            if (dataFetcherResult == null) return null;
-            return dataFetcherResult.toString();
-        }
-        
-        @Override
-        public Object parseValue(Object input) {
-            if (input == null) return null;
-            return input.toString();
-        }
-        
-        @Override
-        public Object parseLiteral(Object input) {
-            return parseValue(input);
-        }
+
+    private GraphQLObjectType createObjectType(Class<?> javaClass) {
+        String typeName = getGraphQLTypeName(javaClass);
+        return GraphQLObjectType.newObject()
+            .name(typeName)
+            .description("Type generated from " + javaClass.getName())
+            .build();
     }
 }

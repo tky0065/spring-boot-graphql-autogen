@@ -104,17 +104,29 @@ public class DefaultAnnotationScanner implements AnnotationScanner {
             }
         }
         
-        // Check for method-level annotations (queries, mutations, subscriptions)
-        return Arrays.stream(clazz.getDeclaredMethods())
-            .anyMatch(method -> 
-                method.isAnnotationPresent(GraphQLQuery.class) ||
+        // Check method-level annotations (for queries, mutations, subscriptions)
+        for (java.lang.reflect.Method method : clazz.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(GraphQLQuery.class) ||
                 method.isAnnotationPresent(GraphQLMutation.class) ||
-                method.isAnnotationPresent(GraphQLSubscription.class)
-            );
+                method.isAnnotationPresent(GraphQLSubscription.class) ||
+                method.isAnnotationPresent(GraphQLField.class)) {
+                return true;
+            }
+        }
+
+        // Check field-level annotations
+        for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
+            if (field.isAnnotationPresent(GraphQLField.class) ||
+                field.isAnnotationPresent(GraphQLIgnore.class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     /**
-     * Scans for classes with a specific annotation.
+     * Scan for classes with a specific annotation.
      */
     private Set<Class<?>> scanForSpecificAnnotation(List<String> basePackages, 
                                                    Class<? extends Annotation> annotationClass) {
@@ -122,34 +134,28 @@ public class DefaultAnnotationScanner implements AnnotationScanner {
             return Set.of();
         }
         
-        Set<Class<?>> result = new HashSet<>();
-        
+        Set<Class<?>> annotatedClasses = new HashSet<>();
+
         for (String basePackage : basePackages) {
             try {
                 Reflections reflections = createReflections(basePackage);
-                Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(annotationClass);
-                result.addAll(annotatedClasses);
-                
-                log.debug("Found {} classes with @{} in package {}", 
-                         annotatedClasses.size(), annotationClass.getSimpleName(), basePackage);
-                         
+                annotatedClasses.addAll(reflections.getTypesAnnotatedWith(annotationClass));
             } catch (Exception e) {
-                log.error("Error scanning package {} for annotation {}", basePackage, annotationClass.getSimpleName(), e);
+                log.error("Error scanning package {} for annotation {}: {}",
+                         basePackage, annotationClass.getSimpleName(), e.getMessage());
             }
         }
         
-        return result;
+        return annotatedClasses;
     }
     
     /**
-     * Creates a Reflections instance for the given package.
+     * Create a Reflections instance for scanning the specified package.
      */
     private Reflections createReflections(String basePackage) {
         return new Reflections(new ConfigurationBuilder()
-            .setUrls(ClasspathHelper.forPackage(basePackage))
-            .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
-            .setExpandSuperTypes(false)
-        );
+                .setUrls(ClasspathHelper.forPackage(basePackage))
+                .setScanners(Scanners.TypesAnnotated, Scanners.MethodsAnnotated, Scanners.FieldsAnnotated));
     }
     
     /**
