@@ -35,28 +35,4 @@ public @interface GraphQLMutation {
      * Custom deprecation reason if this mutation is deprecated.
      */
     String deprecationReason() default "";
-
-    /**
-     * Specifies a custom payload type for this mutation.
-     * If not specified, a default payload type will be generated.
-     */
-    Class<?> payloadType() default void.class;
-
-    /**
-     * Whether this mutation supports batch operations.
-     * If true, the input argument and return type are expected to be lists.
-     */
-    boolean batch() default false;
-
-    /**
-     * Specifies the roles required to access this mutation.
-     * If not specified, no role-based access control will be applied.
-     */
-    String[] roles() default {};
-
-    /**
-     * Specifies the permissions required to access this mutation.
-     * If not specified, no permission-based access control will be applied.
-     */
-    String[] permissions() default {};
 }

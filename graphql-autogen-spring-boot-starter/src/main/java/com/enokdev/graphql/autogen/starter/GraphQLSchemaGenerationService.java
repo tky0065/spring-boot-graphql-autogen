@@ -4,6 +4,7 @@ import com.enokdev.graphql.autogen.generator.SchemaGenerator;
 import com.enokdev.graphql.autogen.scanner.AnnotationScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +35,16 @@ public class GraphQLSchemaGenerationService {
     private final GraphQLAutoGenProperties properties;
     private final ResourceLoader resourceLoader;
 
-    /**
-     * Constructor for Spring autowiring.
-     */
+    public GraphQLSchemaGenerationService(
+            SchemaGenerator schemaGenerator,
+            AnnotationScanner annotationScanner,
+            GraphQLAutoGenProperties properties) {
+        this.schemaGenerator = schemaGenerator;
+        this.annotationScanner = annotationScanner;
+        this.properties = properties;
+        this.resourceLoader = null; // Will be injected if needed
+    }
+
     public GraphQLSchemaGenerationService(
             SchemaGenerator schemaGenerator,
             AnnotationScanner annotationScanner,

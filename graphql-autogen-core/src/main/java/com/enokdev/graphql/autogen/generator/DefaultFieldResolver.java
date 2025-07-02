@@ -1,19 +1,13 @@
 package com.enokdev.graphql.autogen.generator;
 
 import com.enokdev.graphql.autogen.annotation.*;
-import graphql.Scalars;
 import graphql.schema.*;
-import graphql.schema.GraphQLArgument;
-import graphql.schema.GraphQLDirective;
-import graphql.schema.GraphQLList;
-import graphql.schema.GraphQLNonNull;
+// Pas d'import pour GraphQLArgument et GraphQLType pour éviter les conflits
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import jakarta.validation.constraints.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -21,7 +15,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Default implementation of FieldResolver for converting Java fields/methods to GraphQL fields.
@@ -94,17 +87,6 @@ public class DefaultFieldResolver implements FieldResolver {
             if (!deprecationReason.isEmpty()) {
                 fieldBuilder.deprecate(deprecationReason);
             }
-
-            // Handle authorization
-            if (field.isAnnotationPresent(GraphQLAuthorize.class)) {
-                GraphQLAuthorize authorizeAnnotation = field.getAnnotation(GraphQLAuthorize.class);
-                if (authorizeAnnotation.roles().length > 0 || authorizeAnnotation.permissions().length > 0) {
-                    fieldBuilder.withDirective(createAuthDirective(authorizeAnnotation.roles(), authorizeAnnotation.permissions()));
-                }
-            }
-
-            // Add validation directives
-            createValidationDirectives(field).forEach(fieldBuilder::withDirective);
             
             log.debug("Resolved field: {} -> {}", field.getName(), fieldName);
             return fieldBuilder.build();
@@ -139,17 +121,6 @@ public class DefaultFieldResolver implements FieldResolver {
             if (!deprecationReason.isEmpty()) {
                 fieldBuilder.deprecate(deprecationReason);
             }
-
-            // Handle authorization
-            if (method.isAnnotationPresent(GraphQLAuthorize.class)) {
-                GraphQLAuthorize authorizeAnnotation = method.getAnnotation(GraphQLAuthorize.class);
-                if (authorizeAnnotation.roles().length > 0 || authorizeAnnotation.permissions().length > 0) {
-                    fieldBuilder.withDirective(createAuthDirective(authorizeAnnotation.roles(), authorizeAnnotation.permissions()));
-                }
-            }
-
-            // Add validation directives
-            createValidationDirectives(method).forEach(fieldBuilder::withDirective);
             
             // Add arguments if method has parameters
             List<graphql.schema.GraphQLArgument> arguments = resolveMethodArguments(method);
@@ -392,86 +363,5 @@ public class DefaultFieldResolver implements FieldResolver {
         }
         
         return false;
-    }
-
-    private GraphQLDirective createAuthDirective(String[] roles, String[] permissions) {
-        GraphQLDirective.Builder directiveBuilder = GraphQLDirective.newDirective()
-            .name("auth")
-            .description("Directive for authorization");
-
-        if (roles.length > 0) {
-            directiveBuilder.argument(GraphQLArgument.newArgument()
-                .name("roles")
-                .type(GraphQLList.list(Scalars.GraphQLString))
-                .value(List.of(roles))
-                .build());
-        }
-
-        if (permissions.length > 0) {
-            directiveBuilder.argument(GraphQLArgument.newArgument()
-                .name("permissions")
-                .type(GraphQLList.list(Scalars.GraphQLString))
-                .value(List.of(permissions))
-                .build());
-        }
-
-        return directiveBuilder.build();
-    }
-
-    private List<GraphQLDirective> createValidationDirectives(AnnotatedElement element) {
-        List<GraphQLDirective> directives = new ArrayList<>();
-
-        // @NotNull
-        if (element.isAnnotationPresent(NotNull.class)) {
-            directives.add(GraphQLDirective.newDirective()
-                .name("constraint")
-                .argument(GraphQLArgument.newArgument().name("name").value("NotNull").build())
-                .build());
-        }
-
-        // @Size
-        if (element.isAnnotationPresent(Size.class)) {
-            Size size = element.getAnnotation(Size.class);
-            directives.add(GraphQLDirective.newDirective()
-                .name("constraint")
-                .argument(GraphQLArgument.newArgument().name("name").value("Size").build())
-                .argument(GraphQLArgument.newArgument().name("min").value(size.min()).build())
-                .argument(GraphQLArgument.newArgument().name("max").value(size.max()).build())
-                .build());
-        }
-
-        // @Min
-        if (element.isAnnotationPresent(Min.class)) {
-            Min min = element.getAnnotation(Min.class);
-            directives.add(GraphQLDirective.newDirective()
-                .name("constraint")
-                .argument(GraphQLArgument.newArgument().name("name").value("Min").build())
-                .argument(GraphQLArgument.newArgument().name("value").value(min.value()).build())
-                .build());
-        }
-
-        // @Max
-        if (element.isAnnotationPresent(Max.class)) {
-            Max max = element.getAnnotation(Max.class);
-            directives.add(GraphQLDirective.newDirective()
-                .name("constraint")
-                .argument(GraphQLArgument.newArgument().name("name").value("Max").build())
-                .argument(GraphQLArgument.newArgument().name("value").value(max.value()).build())
-                .build());
-        }
-
-        // @Pattern
-        if (element.isAnnotationPresent(Pattern.class)) {
-            Pattern pattern = element.getAnnotation(Pattern.class);
-            directives.add(GraphQLDirective.newDirective()
-                .name("constraint")
-                .argument(GraphQLArgument.newArgument().name("name").value("Pattern").build())
-                .argument(GraphQLArgument.newArgument().name("regexp").value(pattern.regexp()).build())
-                .build());
-        }
-
-        // Add more Bean Validation annotations as needed
-
-        return directives;
     }
 }

@@ -107,10 +107,4 @@ public interface OperationResolver {
      * @return List of GraphQL field definitions for subscriptions
      */
     List<GraphQLFieldDefinition> resolveSubscriptionOperations(Class<?> controllerClass);
-
-    /**
-     * Sets the validation exception handler.
-     * @param validationExceptionHandler The validation exception handler to use.
-     */
-    void setValidationExceptionHandler(com.enokdev.graphql.autogen.validation.ValidationExceptionHandler validationExceptionHandler);
 }

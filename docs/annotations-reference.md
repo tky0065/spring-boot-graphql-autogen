@@ -15,8 +15,7 @@
 - [🏷️ Annotations de Types](#%EF%B8%8F-annotations-de-types)
 - [🔍 Annotations de Champs](#-annotations-de-champs)
 - [⚡ Annotations d'Opérations](#-annotations-dopérations)
-- [🎯 Annotations de Contrôleur](#-annotations-de-contrôleur)
-- [📥 Annotations d'Arguments](#-annotations-darguments)
+- [📥 Annotations d'Entrée](#-annotations-dentrée)
 - [🔄 Annotations Avancées](#-annotations-avancées)
 - [📖 Conventions et Bonnes Pratiques](#-conventions-et-bonnes-pratiques)
 
@@ -71,57 +70,6 @@ public enum BookStatus {
     @GraphQLEnumValue(description = "Disponible") AVAILABLE,
     @GraphQLEnumValue(description = "Emprunté") BORROWED
 }
-```
-
-### `@GraphQLScalar`
-
-Marque une classe comme type scalaire GraphQL personnalisé.
-
-```java
-@GraphQLScalar(
-    name = "DateTime",
-    javaType = java.time.LocalDateTime.class,
-    description = "Représente une date et une heure au format ISO-8601"
-)
-public class CustomDateTimeScalar {
-    // Implémentation du sérialiseur/désérialiseur
-}
-```
-
-### `@GraphQLInterface`
-
-Marque une interface Java comme interface GraphQL.
-
-```java
-@GraphQLInterface(
-    name = "Character",
-    description = "Un personnage dans l'univers Star Wars"
-)
-public interface Character {
-    String getName();
-}
-```
-
-### `@GraphQLUnion`
-
-Marque une classe comme union GraphQL.
-
-```java
-@GraphQLUnion(
-    name = "SearchResult",
-    types = {Book.class, Author.class},
-    description = "Résultat de recherche pouvant être un livre ou un auteur"
-)
-public class SearchResultUnion {}
-```
-
-### `@GraphQLDescription`
-
-Fournit une description pour un type, un champ ou un argument GraphQL.
-
-```java
-@GraphQLDescription("Description détaillée du champ")
-private String myField;
 ```
 
 ---
@@ -185,56 +133,6 @@ public Book createBook(@GraphQLArgument(name = "input") CreateBookInput input) {
 }
 ```
 
-### `@GraphQLSubscription`
-
-Marque une méthode comme Subscription GraphQL.
-
-```java
-@GraphQLSubscription(name = "newBook")
-public Flux<Book> newBook() {
-    return bookPublisher.getNewBookEvents();
-}
-```
-
----
-
-## 🎯 Annotations de Contrôleur
-
-### `@GraphQLController`
-
-Marque une classe comme contrôleur GraphQL, indiquant qu'elle contient des méthodes annotées avec `@GraphQLQuery`, `@GraphQLMutation` ou `@GraphQLSubscription`.
-
-```java
-@GraphQLController
-public class BookController {
-    // ... méthodes de requête, mutation, subscription
-}
-```
-
----
-
-## 📥 Annotations d'Arguments
-
-### `@GraphQLArgument`
-
-Marque un paramètre de méthode comme argument GraphQL.
-
-```java
-public Book getBook(@GraphQLArgument(name = "id", description = "ID du livre") Long id) {
-    return bookService.findById(id);
-}
-```
-
-### `@GParam`
-
-Alias pour `@GraphQLArgument`.
-
-```java
-public Book getBook(@GParam("id") Long id) {
-    return bookService.findById(id);
-}
-```
-
 ---
 
 ## 🔄 Annotations Avancées
@@ -263,17 +161,6 @@ Configure la pagination pour un champ.
     generateFilters = true
 )
 private List<Book> books;
-```
-
-### `@GraphQLOperation`
-
-Annotation générique pour marquer une méthode comme une opération GraphQL (Query, Mutation, Subscription).
-
-```java
-@GraphQLOperation(type = GraphQLOperation.OperationType.QUERY, name = "allBooks")
-public List<Book> getAllBooks() {
-    return bookService.findAll();
-}
 ```
 
 ---

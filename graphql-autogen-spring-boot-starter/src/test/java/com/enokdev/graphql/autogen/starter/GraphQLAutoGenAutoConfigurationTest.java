@@ -20,11 +20,18 @@ import org.springframework.context.annotation.Configuration;
 
 class GraphQLAutoGenAutoConfigurationTest {
 
-    
+    @Configuration
+    static class TestConfiguration {
+        static class TestType {
+            private String name;
+            public String getName() { return name; }
+            public void setName(String name) { this.name = name; }
+        }
+    }
 
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withUserConfiguration(GraphQLAutoGenAutoConfiguration.class);
+            .withConfiguration(AutoConfigurations.of(GraphQLAutoGenAutoConfiguration.class));
 
     private Path tempSchemaDir;
 
@@ -45,10 +52,8 @@ class GraphQLAutoGenAutoConfigurationTest {
     void testAutoConfigurationIsEnabledByDefault() {
         this.contextRunner
                 .withPropertyValues(
-                        "spring.graphql.autogen.enabled=true",
                         "spring.graphql.autogen.schema-location=" + tempSchemaDir.toAbsolutePath().toString(),
-                        "spring.graphql.autogen.base-packages=com.enokdev.graphql.autogen.starter",
-                        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
+                        "spring.graphql.autogen.base-packages=com.enokdev.graphql.autogen.starter"
                 )
                 .run((context) -> {
                     assertThat(context).hasSingleBean(GraphQLAutoGenAutoConfiguration.class);

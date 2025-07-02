@@ -50,43 +50,11 @@ public interface TypeResolver {
     /**
      * Registers a custom type mapping.
      * 
-     * @param javaType The Java class to map
-     * @param graphQLTypeName The name of the GraphQL type to map to
+     * @param javaType Java class
+     * @param graphqlTypeName GraphQL type name
      */
-    void registerTypeMapping(Class<?> javaType, String graphQLTypeName);
-
-    /**
-     * Gets the GraphQL type name for a Java class.
-     *
-     * @param javaType The Java class
-     * @return The GraphQL type name
-     */
-    String getGraphQLTypeName(Class<?> javaType);
-
-    /**
-     * Gets the GraphQL input type name for a Java class.
-     *
-     * @param javaType The Java class
-     * @return The GraphQL input type name
-     */
-    String getGraphQLInputTypeName(Class<?> javaType);
-
-    /**
-     * Resolves a Java class to a GraphQL output type.
-     *
-     * @param javaType The Java class to resolve
-     * @return Corresponding GraphQL output type
-     */
-    graphql.schema.GraphQLOutputType resolveOutputType(Class<?> javaType);
-
-    /**
-     * Resolves a Java class to a GraphQL input type.
-     *
-     * @param javaType The Java class to resolve
-     * @return Corresponding GraphQL input type
-     */
-    graphql.schema.GraphQLInputType resolveInputType(Class<?> javaType);
-
+    void registerTypeMapping(Class<?> javaType, String graphqlTypeName);
+    
     /**
      * Checks if a Java type should be treated as a GraphQL object type.
      * 
