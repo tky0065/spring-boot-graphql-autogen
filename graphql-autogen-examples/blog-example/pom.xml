@@ -8,7 +8,7 @@
     <parent>
         <groupId>io.github.tky0065</groupId>
         <artifactId>graphql-autogen-examples</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>blog-example</artifactId>

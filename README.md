@@ -1,6 +1,20 @@
 # Spring Boot GraphQL Auto-Generator
 
-🚀 **Révolutionnez votre développement GraphQL !** Cette librairie génère automatiquement vos schémas GraphQL à partir de vos entités JPA, DTOs et contrôleurs existants en utilisant de simples annotations.
+<div align="center">
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.3.1+-brightgreen.svg" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/GraphQL-Java%2022.1-blue.svg" alt="GraphQL Java">
+  <img src="https://img.shields.io/badge/JDK-21+-orange.svg" alt="JDK 21+">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+  <img src="https://img.shields.io/badge/Version-1.0.1-informational" alt="Version">
+</div>
+
+<div align="center">
+  <h3>🚀 Générez automatiquement vos schémas GraphQL à partir de vos entités JPA et contrôleurs Spring Boot</h3>
+</div>
+
+## 📖 À propos
+
+Spring Boot GraphQL Auto-Generator est une bibliothèque qui révolutionne votre développement GraphQL en générant automatiquement les schémas GraphQL à partir de vos entités JPA, DTOs et contrôleurs existants. Avec une configuration minimale et de simples annotations, vous pouvez transformer votre API REST existante en API GraphQL complète et flexible.
 
 ## ✨ Pourquoi GraphQL AutoGen ?
 
@@ -62,20 +76,45 @@ public class BookController {
 - ✅ **Support complet** des relations (@OneToMany, @ManyToOne, etc.)
 - ✅ **Validation automatique** avec Bean Validation
 - ✅ **Performance optimisée** avec DataLoaders automatiques
-- ✅ **Configuration zero** pour les cas simples
+- ✅ **Configuration zéro** pour les cas simples
 - ✅ **Extensibilité** pour les cas complexes
 
-## 🚀 Démarrage rapide
+## 📋 Table des matières
 
-### 1. Ajouter la dépendance
+- [Installation](#-installation)
+- [Guide de démarrage rapide](#-guide-de-démarrage-rapide)
+- [Annotations disponibles](#-annotations-disponibles)
+- [Configuration](#-configuration)
+- [Structure du projet](#-structure-du-projet)
+- [Exemples](#-exemples)
+- [Guide de développement](#-guide-de-développement)
+- [Feuille de route](#-feuille-de-route)
+- [Contribuer](#-contribuer)
+- [Licence](#-licence)
+
+## 🔧 Installation
+
+### Maven
 
 ```xml
 <dependency>
-    <groupId>com.example.graphql</groupId>
+    <groupId>io.github.tky0065</groupId>
     <artifactId>graphql-autogen-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
+
+### Gradle
+
+```groovy
+implementation 'io.github.tky0065:graphql-autogen-spring-boot-starter:1.0.1'
+```
+
+## 🚀 Guide de démarrage rapide
+
+### 1. Ajouter la dépendance
+
+Intégrez la bibliothèque à votre projet Spring Boot comme indiqué dans la section [Installation](#-installation).
 
 ### 2. Annoter vos entités
 
@@ -120,15 +159,27 @@ public class BookController {
 }
 ```
 
-### 4. Lancer l'application
+### 4. Configurer l'application (optionnel)
+
+```yaml
+# application.yml
+spring:
+  graphql:
+    autogen:
+      enabled: true
+      base-packages: 
+        - "com.example.model"
+        - "com.example.controller"
+      naming-strategy: "CAMEL_CASE"
+```
+
+### 5. Lancer l'application
 
 ```bash
 mvn spring-boot:run
 ```
 
-Le schéma GraphQL est généré automatiquement ! 🎉
-
-Accédez à GraphiQL : `http://localhost:8080/graphiql`
+Votre schéma GraphQL est maintenant généré et disponible ! Accédez à l'interface GraphiQL : `http://localhost:8080/graphiql`
 
 ## 📋 Annotations disponibles
 
@@ -158,15 +209,20 @@ Accédez à GraphiQL : `http://localhost:8080/graphiql`
 spring:
   graphql:
     autogen:
-      enabled: true
-      base-packages: 
+      enabled: true                     # Active/désactive l'auto-génération
+      base-packages:                    # Packages à scanner
         - "com.example.model"
         - "com.example.controller"
-      naming-strategy: "CAMEL_CASE"
-      generate-inputs: true
-      type-mapping:
+      naming-strategy: "CAMEL_CASE"     # Stratégie de nommage (CAMEL_CASE, SNAKE_CASE)
+      generate-inputs: true             # Génère automatiquement les types Input
+      type-mapping:                     # Mapping des types Java vers GraphQL
         LocalDateTime: "DateTime"
         BigDecimal: "Decimal"
+      data-loader:
+        enabled: true                   # Active les DataLoaders pour les relations
+        batch-size: 100                 # Taille des lots pour le chargement
+      validation:
+        enabled: true                   # Active la validation des inputs
 ```
 
 ## 📁 Structure du projet
@@ -175,7 +231,7 @@ spring:
 spring-boot-graphql-autogen/
 ├── graphql-autogen-core/                 # Logique principale
 │   ├── src/main/java/
-│   │   └── com/example/graphql/autogen/
+│   │   └── io/github/tky0065/graphql/autogen/
 │   │       ├── annotation/              # Annotations GraphQL
 │   │       ├── generator/               # Générateurs de schéma
 │   │       ├── scanner/                 # Scanner d'annotations
@@ -184,38 +240,29 @@ spring-boot-graphql-autogen/
 │
 ├── graphql-autogen-spring-boot-starter/ # Starter Spring Boot
 │   ├── src/main/java/
-│   │   └── com/example/graphql/autogen/
+│   │   └── io/github/tky0065/graphql/autogen/
 │   │       ├── autoconfigure/           # Auto-configuration
 │   │       └── properties/              # Propriétés de configuration
 │   └── src/main/resources/
 │       └── META-INF/spring.factories    # Configuration Spring Boot
 │
-└── graphql-autogen-examples/            # Exemples d'applications
-    ├── simple-library-example/          # Exemple simple
-    └── ecommerce-example/               # Exemple complexe
+├── graphql-autogen-examples/            # Exemples d'applications
+│   ├── blog-example/                    # Exemple de blog
+│   └── ecommerce-example/               # Exemple e-commerce
+│
+├── graphql-autogen-cli/                 # Outil en ligne de commande
+│   └── src/main/java/                   # Interface CLI
+│
+└── graphql-autogen-maven-plugin/        # Plugin Maven
+    └── src/main/java/                   # Plugin pour Maven
 ```
 
-## ✅ Tâches terminées
+## 🌟 Exemples
 
-### Phase 1 : Fondations et architecture ✅
-- [x] **Structure multi-modules Maven** : Projet complet avec `core`, `starter`, `examples`
-- [x] **13 Annotations GraphQL** : Toutes les annotations nécessaires créées
-- [x] **Scanner d'annotations** : `DefaultAnnotationScanner` implémenté avec Reflections
-- [x] **Tests unitaires** : Tests pour annotations et scanner
-- [x] **Architecture de base** : Interfaces et exceptions définies
-- [x] **Package EnokDev** : Migration complète vers `com.enokdev.graphql.autogen`
+Consultez nos exemples fonctionnels dans le répertoire `graphql-autogen-examples/` :
 
-### Phase 2 : Scanner d'annotations ✅
-- [x] **Interface AnnotationScanner** : Contrat défini
-- [x] **DefaultAnnotationScanner** : Implémentation complète avec Reflections
-- [x] **Scan par type** : Méthodes spécifiques pour Types, Inputs, Enums, Controllers
-- [x] **Validation des classes** : Filtrage des classes invalides (interfaces, abstraites, etc.)
-- [x] **Gestion d'erreurs** : Logging et gestion gracieuse des erreurs
-- [x] **Tests complets** : Tests unitaires et d'intégration
-
-### Prochaine étape : Tâche 3 - Générateur de types Object GraphQL
-
----
+- **Blog Example** : Application simple de blog avec des posts et des commentaires
+- **E-commerce Example** : Application e-commerce plus complexe avec produits, catégories, paniers et commandes
 
 ## 🛠️ Guide de développement
 
@@ -235,3 +282,19 @@ mvn test
 # Skip tests
 mvn clean install -DskipTests
 ```
+
+### Contributions
+Nous accueillons les contributions ! Consultez notre [guide de contribution](CONTRIBUTING.md) pour plus d'informations.
+
+## 🚦 Statut du projet
+
+Le projet est activement développé et maintenu. Consultez notre [feuille de route](ROADMAP.md) pour connaître les fonctionnalités à venir.
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 👥 Contact et Support
+
+- **GitHub Issues**: Pour les bugs et demandes de fonctionnalités
+- **Documentation**: Consultez notre [documentation complète](https://tky0065.github.io/spring-boot-graphql-autogen/)

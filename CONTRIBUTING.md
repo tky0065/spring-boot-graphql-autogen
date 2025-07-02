@@ -131,7 +131,7 @@ Description de ce qui se passe actuellement.
 - **OS**: [e.g. Windows 10, macOS 12.0]
 - **Java**: [e.g. OpenJDK 21]
 - **Spring Boot**: [e.g. 3.3.1]
-- **Version GraphQL AutoGen**: [e.g. 1.0.0]
+- **Version GraphQL AutoGen**: [e.g. 1.0.1]
 ```
 
 ## 👥 Code de conduite

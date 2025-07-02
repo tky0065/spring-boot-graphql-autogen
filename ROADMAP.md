@@ -6,7 +6,7 @@ Cette roadmap présente la vision à long terme du projet et les fonctionnalité
 
 **Devenir l'outil de référence pour la génération automatique de schémas GraphQL dans l'écosystème Spring Boot**, en fournissant une expérience développeur exceptionnelle et une intégration seamless.
 
-## 📊 État actuel (v1.0.0)
+## 📊 État actuel (v1.0.1)
 
 ### ✅ Fonctionnalités implémentées
 
@@ -149,7 +149,7 @@ Cette roadmap présente la vision à long terme du projet et les fonctionnalité
 
 ### 2025
 ```
-Q1 ████████████ v1.0.0 Release ✅
+Q1 ████████████ v1.0.1 Release ✅
 Q2 ████████▒▒▒▒ v1.1.0 Security (75%)
 Q3 ████▒▒▒▒▒▒▒▒ v1.1.0 Release
 Q4 ██▒▒▒▒▒▒▒▒▒▒ v1.2.0 Development

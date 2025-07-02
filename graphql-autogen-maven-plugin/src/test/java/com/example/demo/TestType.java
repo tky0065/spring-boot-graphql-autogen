@@ -1,9 +1,9 @@
 package com.example.demo;
 
-import com.enokdev.graphql.autogen.annotation.GraphQLType;
+import com.enokdev.graphql.autogen.annotation.GraphQLInterface;
 import com.enokdev.graphql.autogen.annotation.GraphQLField;
 
-@GraphQLType(name = "TestType")
+@GraphQLInterface(name = "TestType")
 public class TestType {
 
     @GraphQLField

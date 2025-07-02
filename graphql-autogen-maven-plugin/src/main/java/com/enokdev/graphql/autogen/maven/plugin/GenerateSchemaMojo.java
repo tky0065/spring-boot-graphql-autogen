@@ -5,7 +5,9 @@ import com.enokdev.graphql.autogen.generator.DefaultSchemaGenerator;
 import com.enokdev.graphql.autogen.generator.DefaultTypeResolver;
 import com.enokdev.graphql.autogen.generator.SchemaGenerator;
 import com.enokdev.graphql.autogen.scanner.DefaultAnnotationScanner;
+import graphql.schema.GraphQLSchema;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -20,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,8 +98,21 @@ public class GenerateSchemaMojo extends AbstractMojo {
     @Parameter(property = "graphql.autogen.typeMapping")
     private Map<String, String> typeMapping;
 
+    // Ajout des méthodes setters pour les tests
+    public void setBasePackages(List<String> basePackages) {
+        this.basePackages = basePackages;
+    }
+
+    public void setSchemaLocation(File schemaLocation) {
+        this.schemaLocation = schemaLocation;
+    }
+
+    public void setSchemaFileName(String schemaFileName) {
+        this.schemaFileName = schemaFileName;
+    }
+
     @Override
-    public void execute() {
+    public void execute() throws MojoExecutionException {
         if (!enabled) {
             getLog().info("GraphQL schema generation is disabled.");
             return;
@@ -106,21 +122,36 @@ public class GenerateSchemaMojo extends AbstractMojo {
 
         // Validate parameters
         if (basePackages == null || basePackages.isEmpty()) {
-            throw new org.apache.maven.plugin.MojoExecutionException("Parameter 'basePackages' is required and cannot be empty.");
+            throw new MojoExecutionException("Parameter 'basePackages' is required and cannot be empty.");
         }
         if (schemaLocation == null) {
-            throw new org.apache.maven.plugin.MojoExecutionException("Parameter 'schemaLocation' is required.");
+            throw new MojoExecutionException("Parameter 'schemaLocation' is required.");
         }
         if (schemaFileName == null || schemaFileName.trim().isEmpty()) {
-            throw new org.apache.maven.plugin.MojoExecutionException("Parameter 'schemaFileName' is required and cannot be empty.");
+            throw new MojoExecutionException("Parameter 'schemaFileName' is required and cannot be empty.");
         }
 
         try {
             // Add project's compile classpath to the current classloader
             List<URL> classpathUrls = new ArrayList<>();
-            for (String element : project.getCompileClasspathElements()) {
-                classpathUrls.add(new File(element).toURI().toURL());
+            try {
+                // Utilisation d'une méthode plus sûre pour récupérer les éléments du classpath
+                @SuppressWarnings("unchecked")
+                List<String> elements = project.getCompileClasspathElements();
+                for (String element : elements) {
+                    try {
+                        URL url = new File(element).toURI().toURL();
+                        classpathUrls.add(url);
+                        getLog().debug("Added to classpath: " + url);
+                    } catch (Exception e) {
+                        getLog().debug("Could not convert classpath element to URL: " + element, e);
+                    }
+                }
+            } catch (Exception e) {
+                getLog().warn("Could not retrieve project classpath, using current classpath", e);
             }
+
+            // Création d'un ClassLoader parent-last pour éviter les conflits de versions
             URLClassLoader classLoader = new URLClassLoader(
                 classpathUrls.toArray(new URL[0]),
                 Thread.currentThread().getContextClassLoader()
@@ -130,23 +161,27 @@ public class GenerateSchemaMojo extends AbstractMojo {
             GraphQLAutoGenConfig config = new GraphQLAutoGenConfig();
             config.setBasePackages(basePackages);
             config.setGenerateInputs(generateInputs);
-            config.setGenerateSubscriptions(generateSubscriptions);
             if (typeMapping != null) {
-                config.setTypeMapping(typeMapping);
+                for (Map.Entry<String, String> entry : typeMapping.entrySet()) {
+                    config.addTypeMapping(entry.getKey(), entry.getValue());
+                }
             }
 
             DefaultTypeResolver typeResolver = new DefaultTypeResolver();
             SchemaGenerator schemaGenerator = new DefaultSchemaGenerator(typeResolver, null, null, null, config);
             DefaultAnnotationScanner annotationScanner = new DefaultAnnotationScanner();
 
-            Set<Class<?>> annotatedClasses = annotationScanner.scan(basePackages);
+            // Correction: utiliser scanForAnnotatedClasses() au lieu de scan()
+            Set<Class<?>> annotatedClasses = annotationScanner.scanForAnnotatedClasses(basePackages);
 
             if (annotatedClasses.isEmpty()) {
                 getLog().warn("No GraphQL annotated classes found in specified base packages. Schema generation skipped.");
                 return;
             }
 
-            String schemaContent = schemaGenerator.generateSchemaString(new ArrayList<>(annotatedClasses));
+            // Génération du schéma et conversion en String
+            GraphQLSchema schema = schemaGenerator.generateSchema(new ArrayList<>(annotatedClasses));
+            String schemaContent = schema.toString();
 
             Path outputPath = Paths.get(schemaLocation.toURI());
             if (!Files.exists(outputPath)) {
@@ -160,7 +195,7 @@ public class GenerateSchemaMojo extends AbstractMojo {
 
         } catch (Exception e) {
             getLog().error("Failed to generate GraphQL schema", e);
-            throw new org.apache.maven.plugin.MojoExecutionException("Failed to generate GraphQL schema", e);
+            throw new MojoExecutionException("Failed to generate GraphQL schema", e);
         }
     }
 }

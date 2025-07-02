@@ -76,21 +76,11 @@ public class GraphQLAutoGenAutoConfiguration implements ApplicationContextAware 
      */
     @PostConstruct
     public void generateSchemaOnStartup() {
-        // Exécution différée pour éviter les dépendances circulaires
+        // Ne rien faire ici, la génération sera gérée par GraphQLSchemaGenerationApplicationListener
+        // Ce changement évite la dépendance circulaire
         if (properties != null && properties.isEnabled() &&
-            properties.getGenerationMode() == GraphQLAutoGenProperties.GenerationMode.STARTUP &&
-            applicationContext != null) {
-
-            // Utilisation du contexte d'application pour obtenir le service après initialisation complète
-            try {
-                GraphQLSchemaGenerationService service = applicationContext.getBean(GraphQLSchemaGenerationService.class);
-                if (service != null) {
-                    log.info("Generating GraphQL schema at startup");
-                    service.generateSchema();
-                }
-            } catch (Exception e) {
-                log.error("Failed to generate GraphQL schema at startup", e);
-            }
+            properties.getGenerationMode() == GraphQLAutoGenProperties.GenerationMode.STARTUP) {
+            log.info("Schema generation will be handled by application listener after context is fully initialized");
         }
     }
 

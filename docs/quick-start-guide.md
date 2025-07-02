@@ -39,7 +39,7 @@ Ouvrez le fichier `pom.xml` de votre projet et ajoutez la dépendance suivante :
 <dependency>
     <groupId>com.enokdev.graphql</groupId>
     <artifactId>graphql-autogen-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 

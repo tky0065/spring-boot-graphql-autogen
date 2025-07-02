@@ -37,7 +37,7 @@ Ce guide vous montre comment migrer progressivement une API REST Spring Boot exi
 <dependency>
     <groupId>com.enokdev</groupId>
     <artifactId>graphql-autogen-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 

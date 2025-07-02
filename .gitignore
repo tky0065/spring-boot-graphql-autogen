@@ -33,3 +33,4 @@ p.txt
 /graphql-autogen-examples/target/
 /graphql-autogen-cli/target/
 /graphql-autogen-spring-boot-starter/target/
+/graphql-autogen-maven-plugin/target/
